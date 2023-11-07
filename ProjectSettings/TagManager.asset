@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - ShipLaser
+  - AlienLaser
+  - BasicAlien
+  - Coin
+  - CoinBag
+  - Alien1
+  - Alien2
+  - Alien3
+  - Alien1Laser
+  - Alien2Laser
+  - Alien3Laser
+  - ShipLaser1
+  - PauseMenu
+  - RestartButton
+  - StoreMenu
+  - IncreaseLaserSpeed
+  - IncreaseLaserDamage
+  - DecreaseLaserCooldown
+  - IncreaseHealth
+  - IncreaseMoveSpeed
+  - ShipExplosion
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Explosion
+    uniqueID: 1005018025
+    locked: 0
