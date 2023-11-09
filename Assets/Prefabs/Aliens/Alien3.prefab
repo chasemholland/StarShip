@@ -461,8 +461,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabAlienLaser: {fileID: 7061623817638570024, guid: d936f6eeed91bf143b5448cda938b4e4, type: 3}
-  prefabCoin: {fileID: 173188916439255838, guid: 0e9bb8d82cfca0f4db2ebe35a5fc2bcc, type: 3}
-  prefabCoinBag: {fileID: 7596019185810398085, guid: f63511d02f40d884a86d450161290d67, type: 3}
+  prefabCoin: {fileID: 8048544434741394120, guid: 823cb2ca2b8389f419a7494e4ec78e68, type: 3}
+  prefabCoinBag: {fileID: 5564946302592961414, guid: fda2b548910b3b742a46887917d5213d, type: 3}
+  prefabHeart: {fileID: 4892247895090147773, guid: 0ccebd7e1c158b2449a921ac6dbba416, type: 3}
+  prefabShield: {fileID: 182536384319862222, guid: a0890e19b66ce084d9032866e5ca1478, type: 3}
   healthBar: {fileID: 6928798438583577981}
   prefabAlienExplosion: {fileID: 513713944294864804, guid: 52cf47edfefd9cf45b43c4b5f8e61efe, type: 3}
   prefabShipLaserExplosion: {fileID: 4141691504688172972, guid: edb86e76373ee8d4b86c859c3149f1f2, type: 3}

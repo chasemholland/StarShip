@@ -6,6 +6,6 @@ using UnityEngine.Events;
 /// <summary>
 /// Loose money event
 /// </summary>
-public class LooseMoneyEvent : UnityEvent<int>
+public class LooseMoneyEvent : UnityEvent<float>
 {
 }

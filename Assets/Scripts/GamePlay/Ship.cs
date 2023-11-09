@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// Player ship mechanics
 /// </summary>
-public class Ship : IntEventInvoker
+public class Ship : FloatEventInvoker
 {
     #region Fields
 
@@ -21,14 +21,17 @@ public class Ship : IntEventInvoker
     // alien1 laser explosion
     [SerializeField]
     GameObject prefabAlien1LaserExplosion;
+    float alien1LaserDamage;
 
     // alien2 laser explosion
     [SerializeField]
     GameObject prefabAlien2LaserExplosion;
+    float alien2LaserDamage;
 
     // alien3 laser explosion
     [SerializeField]
     GameObject prefabAlien3LaserExplosion;
+    float alien3LaserDamage;
 
     [SerializeField]
     float laserSpeed;
@@ -41,6 +44,9 @@ public class Ship : IntEventInvoker
     // gameplay support
     float moveSpeed;
     float healthLeft;
+    float maxHealth;
+    float shieldLeft;
+    float maxShield;
 
     // ship body reference
     Rigidbody2D shipBody;
@@ -66,6 +72,11 @@ public class Ship : IntEventInvoker
     {
         // set ship values
         SetShipValues();
+
+        // set alien laser damage
+        alien1LaserDamage = ConfigUtils.Alien1LaserDamage;
+        alien2LaserDamage = ConfigUtils.Alien2LaserDamage;
+        alien3LaserDamage = ConfigUtils.Alien3LaserDamage;
 
         // get reference to ship body
         shipBody = GetComponent<Rigidbody2D>();
@@ -93,6 +104,15 @@ public class Ship : IntEventInvoker
         // add as invoker for decrease health event
         unityEvents.Add(EventName.DecreaseHealthEvent, new DecreaseHealthEvent());
         EventManager.AddInvoker(EventName.DecreaseHealthEvent, this);
+
+        // add as invoker for increase shield event
+        unityEvents.Add(EventName.IncreaseShieldEvent, new IncreaseShieldEvent());
+        EventManager.AddInvoker(EventName.IncreaseShieldEvent, this);
+
+        // add as invoker for decrease shield event
+        unityEvents.Add(EventName.DecreaseShieldEvent, new DecreaseShieldEvent());
+        EventManager.AddInvoker(EventName.DecreaseShieldEvent, this);
+
     }
 
     /// <summary>
@@ -159,12 +179,8 @@ public class Ship : IntEventInvoker
             // destroy alien laser
             Destroy(other.gameObject);
 
-            // keep track of health
-            healthLeft -= 1;
-
-            // decrease halth bar
-            unityEvents[EventName.DecreaseHealthEvent].Invoke(1);
-
+            // hurt player
+            DecreaseHealthOrShield(alien1LaserDamage);
         }
 
         if (other.CompareTag("Alien2Laser"))
@@ -181,11 +197,8 @@ public class Ship : IntEventInvoker
             // destroy alien laser
             Destroy(other.gameObject);
 
-            // keep track of health
-            healthLeft -= 1;
-
-            // decrease halth bar
-            unityEvents[EventName.DecreaseHealthEvent].Invoke(1);
+            // hurt player
+            DecreaseHealthOrShield(alien2LaserDamage);
         }
 
         if (other.CompareTag("Alien3Laser"))
@@ -202,11 +215,8 @@ public class Ship : IntEventInvoker
             // destroy alien laser
             Destroy(other.gameObject);
 
-            // keep track of health
-            healthLeft -= 1;
-
-            // decrease halth bar
-            unityEvents[EventName.DecreaseHealthEvent].Invoke(1);
+            // hurt player
+            DecreaseHealthOrShield(alien3LaserDamage);
         }
 
         // check if dead
@@ -230,7 +240,6 @@ public class Ship : IntEventInvoker
 
             Destroy(other.gameObject);
             unityEvents[EventName.AddMoneyEvent].Invoke(coinValue);
-            return;
         }
 
         // check for coin bag pickup
@@ -241,7 +250,50 @@ public class Ship : IntEventInvoker
 
             Destroy(other.gameObject);
             unityEvents[EventName.AddMoneyEvent].Invoke(coinBagValue);
-            return;
+        }
+
+        // check for health pickup
+        if (other.CompareTag("Heart"))
+        {
+            // play pickup sound
+            AudioManager.Play(AudioName.Pickup);
+
+            // check if health amount can be added
+            if (healthLeft + 1 <= maxHealth)
+            {
+                healthLeft += 1;
+                unityEvents[EventName.IncreaseHealthEvent].Invoke(1);
+            }
+            else
+            {
+                float healthAddedAmount = maxHealth - healthLeft;
+                healthLeft += healthAddedAmount;
+                unityEvents[EventName.IncreaseHealthEvent].Invoke(healthAddedAmount);
+            }
+            Destroy(other.gameObject);
+
+        }
+
+        // check for shield pickup
+        if (other.CompareTag("Shield"))
+        {
+            // play pickup sound
+            AudioManager.Play(AudioName.Pickup);
+
+            // check if shield amount can be added
+            if (shieldLeft + 1 <= maxShield)
+            {
+                shieldLeft += 1;
+                unityEvents[EventName.IncreaseShieldEvent].Invoke(1);
+            }
+            else
+            {
+                float shieldAddedAmount = maxShield - shieldLeft;
+                shieldLeft += shieldAddedAmount;
+                unityEvents[EventName.IncreaseShieldEvent].Invoke(shieldAddedAmount);
+            }
+            Destroy(other.gameObject);
+
         }
     }
 
@@ -265,6 +317,11 @@ public class Ship : IntEventInvoker
 
         // check for health upgrades
         healthLeft = ConfigUtils.Ship1LifeAmount * (1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipLifeAmount.ToString(), 0));
+        maxHealth = healthLeft;
+
+        // set shield
+        shieldLeft = 0;
+        maxShield = ConfigUtils.Ship1MaxShield * (1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipMaxShield.ToString(), 0));
 
     }
 
@@ -294,6 +351,42 @@ public class Ship : IntEventInvoker
     {
         canShoot = true;
         cooldownTimer.Stop();
+    }
+
+    /// <summary>
+    /// Handles player being damaged
+    /// </summary>
+    /// <param name="damageAmount"></param>
+    private void DecreaseHealthOrShield(float damageAmount)
+    {
+        if (shieldLeft == 0)
+        {
+            // keep track of health
+            healthLeft -= damageAmount;
+
+            // decrease halth bar
+            unityEvents[EventName.DecreaseHealthEvent].Invoke(damageAmount);
+        }
+        else
+        {
+            // keep track of shield
+            if (shieldLeft - damageAmount <= 0)
+            {
+                // decrease shield bar
+                unityEvents[EventName.DecreaseShieldEvent].Invoke(shieldLeft);
+
+                // set shield value to zero
+                shieldLeft = 0;
+            }
+            else
+            {
+                // decrease shield bar
+                unityEvents[EventName.DecreaseShieldEvent].Invoke(damageAmount);
+
+                // decrement shield value
+                shieldLeft -= damageAmount;
+            }
+        }
     }
 
     #endregion

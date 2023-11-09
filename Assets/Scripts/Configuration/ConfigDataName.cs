@@ -3,6 +3,7 @@
 /// </summary>
 public enum ConfigDataName
 {
+    Ship1MaxShield,
     Ship1LaserCooldown,
     Ship1LaserSpeed,
     Ship1MoveSpeed,

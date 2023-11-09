@@ -28,11 +28,15 @@ public class InvasionOver : MonoBehaviour
     [SerializeField]
     TextMeshProUGUI bonusCoinsText;
     int bonusCoinsValue;
-    string bonusCoinsPrefix = "BONUS COINS: ";
+
+    [SerializeField]
+    TextMeshProUGUI bonusCoinsCalcText;
+    int redsDefeatedValue;
+    int greensDefeatedValue;
 
     [SerializeField]
     TextMeshProUGUI spaceCoinsTotalText;
-    int spaceCoinsTotalValue;
+    float spaceCoinsTotalValue;
     string spaceCoinsTotalPrefix = "SPACE COINS: ";
 
     #endregion
@@ -44,6 +48,12 @@ public class InvasionOver : MonoBehaviour
     /// </summary>
     private void Start()
     {
+        // play background music
+        if (LoopingAudioManager.Playing == AudioName.GamePlayAmbient)
+        {
+            LoopingAudioManager.Switch(AudioName.Ambient);
+        }
+
         // set values
         SetValues();
 
@@ -65,12 +75,14 @@ public class InvasionOver : MonoBehaviour
     {
         roundsCompletedValue = PlayerPrefs.GetInt(PlayerPrefNames.RoundsCompleted.ToString(), 0);
         aliensDefeatedValue = PlayerPrefs.GetInt(PlayerPrefNames.AliensDefeated.ToString(), 0);
+        redsDefeatedValue = PlayerPrefs.GetInt(PlayerPrefNames.RedsDefeated.ToString(), 0);
+        greensDefeatedValue = PlayerPrefs.GetInt(PlayerPrefNames.GreensDefeated.ToString(), 0);
         mothershipsDefeatedValue = PlayerPrefs.GetInt(PlayerPrefNames.MotherShipsDefeated.ToString(), 0);
-        bonusCoinsValue = (5 * aliensDefeatedValue) + (500 * mothershipsDefeatedValue);
-        spaceCoinsTotalValue = PlayerPrefs.GetInt(PlayerPrefNames.PlayerMoney.ToString(), 0) + bonusCoinsValue;
+        bonusCoinsValue = (10 * redsDefeatedValue) + (20 * greensDefeatedValue) + (250 * mothershipsDefeatedValue);
+        spaceCoinsTotalValue = PlayerPrefs.GetFloat(PlayerPrefNames.PlayerMoney.ToString(), 0) + bonusCoinsValue;
 
         // set new player money value
-        PlayerPrefs.SetInt(PlayerPrefNames.PlayerMoney.ToString(), spaceCoinsTotalValue);
+        PlayerPrefs.SetFloat(PlayerPrefNames.PlayerMoney.ToString(), spaceCoinsTotalValue);
     }
 
     /// <summary>
@@ -81,7 +93,8 @@ public class InvasionOver : MonoBehaviour
         roundsCompletedText.text = roundsCompletedPrefix + roundsCompletedValue.ToString();
         aliensDefeatedText.text = aliensDefeatedPrefix + aliensDefeatedValue.ToString();
         mothershipsDefeatedText.text = mothershipsDefeatedPrefix + mothershipsDefeatedValue.ToString();
-        bonusCoinsText.text = bonusCoinsPrefix + "(" + aliensDefeatedValue.ToString() + " x 5) + (" + mothershipsDefeatedValue + " x 500) = " + bonusCoinsValue.ToString();
+        bonusCoinsText.text = bonusCoinsValue.ToString();
+        bonusCoinsCalcText.text = "Reds(" + redsDefeatedValue.ToString() + " x 10) Greens(" + greensDefeatedValue.ToString() + " x 20) Blues(" + mothershipsDefeatedValue.ToString() + " x 250)";
         spaceCoinsTotalText.text = spaceCoinsTotalPrefix + spaceCoinsTotalValue.ToString();
     }
 
@@ -92,6 +105,8 @@ public class InvasionOver : MonoBehaviour
     {
         PlayerPrefs.SetInt(PlayerPrefNames.RoundsCompleted.ToString(), 0);
         PlayerPrefs.SetInt(PlayerPrefNames.AliensDefeated.ToString(), 0);
+        PlayerPrefs.SetInt(PlayerPrefNames.RedsDefeated.ToString(), 0);
+        PlayerPrefs.SetInt(PlayerPrefNames.GreensDefeated.ToString(), 0);
         PlayerPrefs.SetInt(PlayerPrefNames.MotherShipsDefeated.ToString(), 0);
     }
 

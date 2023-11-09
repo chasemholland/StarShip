@@ -17,6 +17,14 @@ public static class ConfigUtils
     #region Properties
 
     /// <summary>
+    /// Gets the initial max shield value
+    /// </summary>
+    public static float Ship1MaxShield
+    {
+        get { return configData.Ship1MaxShield; }
+    }
+
+    /// <summary>
     /// Gets the basic ship laser shoot cooldown
     /// </summary>
     public static float Ship1LaserCooldown

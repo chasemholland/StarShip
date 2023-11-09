@@ -15,18 +15,28 @@ public class Background : MonoBehaviour
 
     [SerializeField]
     TextMeshProUGUI moneyText;
-    int moneyValue;
+    float moneyValue;
     const string moneyTextPrefix = "Space Coins: ";
 
     [SerializeField]
     TextMeshProUGUI roundText;
-    int roundValue = 0;
+    float roundValue = 0;
     const string roundTextPrefix = "Rounds Completed: ";
 
     [SerializeField]
     Image healthBar;
     float healthAmount;
     float maxHealth;
+
+    [SerializeField]
+    Image shieldBarBoarder;
+    Color shieldBarBoarderColor;
+    Color shieldPulseColor;
+
+    [SerializeField]
+    Image shieldBar;
+    float shieldAmount;
+    float maxShield;
 
     #endregion
 
@@ -51,8 +61,14 @@ public class Background : MonoBehaviour
         // add as listener for decrease health event
         EventManager.AddListener(EventName.DecreaseHealthEvent, HandleDecreaseHealthEvent);
 
+        // add as listener for increase shield event
+        EventManager.AddListener(EventName.IncreaseShieldEvent, HandleIncreaseShieldEvent);
+
+        // add as listener for decrease shield event
+        EventManager.AddListener(EventName.DecreaseShieldEvent, HandleDecreaseShieldEvent);
+
         // set up money text
-        moneyValue = PlayerPrefs.GetInt(PlayerPrefNames.PlayerMoney.ToString(), 0);
+        moneyValue = PlayerPrefs.GetFloat(PlayerPrefNames.PlayerMoney.ToString(), 0);
         moneyText.text = moneyTextPrefix + moneyValue.ToString();
 
         // set up round text
@@ -62,6 +78,18 @@ public class Background : MonoBehaviour
         healthAmount = ConfigUtils.Ship1LifeAmount * (1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipLifeAmount.ToString(), 0));
         maxHealth = healthAmount;
 
+        // set shield boarder visibillity
+        shieldBarBoarderColor = shieldBarBoarder.color;
+        shieldBarBoarderColor.a = 0;
+        shieldBarBoarder.color = shieldBarBoarderColor;
+
+        // set shield amount
+        shieldAmount = 0;
+        maxShield = ConfigUtils.Ship1MaxShield * (1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipMaxShield.ToString(), 0));
+        shieldBar.fillAmount = 0;
+        shieldPulseColor = GameObject.FindGameObjectWithTag("ShieldPulse").GetComponent<SpriteRenderer>().color;
+        shieldPulseColor.a = 0;
+        GameObject.FindGameObjectWithTag("ShieldPulse").GetComponent<SpriteRenderer>().color = shieldPulseColor;
     }
 
     #endregion
@@ -72,7 +100,7 @@ public class Background : MonoBehaviour
     /// Handles adding money event
     /// </summary>
     /// <param name="amount"></param>
-    private void HandleAddMoneyEvent(int amount)
+    private void HandleAddMoneyEvent(float amount)
     {
         // increment money
         moneyValue += amount;
@@ -80,35 +108,21 @@ public class Background : MonoBehaviour
         // set money text
         moneyText.text = moneyTextPrefix + moneyValue.ToString();
     }
-    /*
-    /// <summary>
-    /// Handles removing money event
-    /// </summary>
-    /// <param name="amount"></param>
-    private void HandleLooseMoneyEvent(int amount)
-    {
-        // decrement health
-        moneyValue -= amount;
-
-        // set money text
-        moneyText.text = moneyTextPrefix + moneyValue.ToString();
-    }
-    */
 
     /// <summary>
     /// Handles incrementing the rounds completed
     /// </summary>
     /// <param name="number"></param>
-    private void HandleAddRoundEvent(int number)
+    private void HandleAddRoundEvent(float number)
     {
         // increment round number
         roundValue += number;
 
         // save money on round complete
-        PlayerPrefs.SetInt(PlayerPrefNames.PlayerMoney.ToString(), moneyValue);
+        PlayerPrefs.SetFloat(PlayerPrefNames.PlayerMoney.ToString(), moneyValue);
 
         // save rounds completed
-        PlayerPrefs.SetInt(PlayerPrefNames.RoundsCompleted.ToString(), roundValue);
+        PlayerPrefs.SetFloat(PlayerPrefNames.RoundsCompleted.ToString(), roundValue);
 
         // set round text
         roundText.text = roundTextPrefix + roundValue.ToString();
@@ -118,7 +132,7 @@ public class Background : MonoBehaviour
     /// Handles player loosing health
     /// </summary>
     /// <param name="amount"></param>
-    private void HandleDecreaseHealthEvent(int amount)
+    private void HandleDecreaseHealthEvent(float amount)
     {
         // decrement health
         healthAmount -= amount;
@@ -131,7 +145,7 @@ public class Background : MonoBehaviour
     /// Handles player gaining health
     /// </summary>
     /// <param name="amount"></param>
-    private void HandleIncreaseHealthEvent(int amount)
+    private void HandleIncreaseHealthEvent(float amount)
     {
         // increment health
         healthAmount += amount;
@@ -144,10 +158,66 @@ public class Background : MonoBehaviour
     }
 
     /// <summary>
+    /// Handles player gaining shield
+    /// </summary>
+    /// <param name="amount"></param>
+    private void HandleIncreaseShieldEvent(float amount)
+    {
+        // set sheild visible
+        if (shieldBarBoarderColor.a == 0)
+        {
+            shieldBarBoarderColor.a = 1;
+            shieldBarBoarder.color = shieldBarBoarderColor;
+
+            // activate shield pulse
+            shieldPulseColor.a = 1;
+            GameObject.FindGameObjectWithTag("ShieldPulse").GetComponent<SpriteRenderer>().color = shieldPulseColor;
+        }
+
+        // increment shield amount
+        shieldAmount += amount;
+
+        // clamp shield to range between 0 and max shield
+        shieldAmount = Mathf.Clamp(shieldAmount, 0, maxShield);
+
+        // set sheild bar fill
+        shieldBar.fillAmount = shieldAmount / maxShield;
+    }
+
+    /// <summary>
+    /// Handles player loosing shield
+    /// </summary>
+    /// <param name="amount"></param>
+    private void HandleDecreaseShieldEvent(float amount)
+    {
+        // decrement shield amount
+        shieldAmount -= amount;
+
+        if (shieldAmount == 0)
+        {
+            // make boarder invisible
+            shieldBarBoarderColor.a = 0;
+            shieldBarBoarder.color = shieldBarBoarderColor;
+
+            // set shield bar fill
+            shieldBar.fillAmount = 0;
+
+            // deactivate shield pulse
+            shieldPulseColor.a = 0;
+            GameObject.FindGameObjectWithTag("ShieldPulse").GetComponent<SpriteRenderer>().color = shieldPulseColor;
+        }
+        else
+        {
+            // set shield bar fill
+            shieldBar.fillAmount = shieldAmount / maxShield;
+        }
+    }
+
+    /// <summary>
     /// Handles player death
     /// </summary>
     /// <param name="n">unused</param>
-    private void HandleInvasionCompleteEvent(int n)
+    private void HandleInvasionCompleteEvent(float n)
     {
         // load death scene
         SceneManager.LoadScene("InvasionOver");

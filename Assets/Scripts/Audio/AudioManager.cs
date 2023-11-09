@@ -51,13 +51,13 @@ public static class AudioManager
     /// <param name="clipName"></param>
     public static void Play(AudioName clipName)
     {
-        if (clipName == AudioName.Explosion)
+        if (clipName == AudioName.ShipLaser || clipName == AudioName.Pickup)
         {
-            audioSource.PlayOneShot(audioClips[clipName]);
+            audioSource.PlayOneShot(audioClips[clipName], 0.5f);
         }
         else
         {
-            audioSource.PlayOneShot(audioClips[clipName], 0.5f);
+            audioSource.PlayOneShot(audioClips[clipName]);
         }
         
     }

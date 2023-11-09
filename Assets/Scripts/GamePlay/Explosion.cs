@@ -6,7 +6,7 @@ using UnityEngine.Events;
 /// <summary>
 /// Explosion animation control
 /// </summary>
-public class Explosion : IntEventInvoker
+public class Explosion : FloatEventInvoker
 {
     [SerializeField]
     Sprite endSprite;

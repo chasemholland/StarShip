@@ -6,6 +6,6 @@ using UnityEngine.Events;
 /// <summary>
 /// Add round event
 /// </summary>
-public class AddRoundEvent : UnityEvent<int>
+public class AddRoundEvent : UnityEvent<float>
 {
 }

@@ -13,5 +13,7 @@ public enum EventName
     AddRoundEvent,
     IncreaseHealthEvent,
     DecreaseHealthEvent,
+    IncreaseShieldEvent,
+    DecreaseShieldEvent,
     InvasionCompleteEvent
 }

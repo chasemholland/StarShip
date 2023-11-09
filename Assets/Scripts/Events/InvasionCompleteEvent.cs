@@ -6,6 +6,6 @@ using UnityEngine.Events;
 /// <summary>
 /// Invasion complete event
 /// </summary>
-public class InvasionCompleteEvent : UnityEvent<int>
+public class InvasionCompleteEvent : UnityEvent<float>
 {
 }

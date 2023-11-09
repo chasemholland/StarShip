@@ -20,6 +20,14 @@ public class Alien : MonoBehaviour
     [SerializeField]
     GameObject prefabCoinBag;
 
+    // prefab heart
+    [SerializeField]
+    GameObject prefabHeart;
+
+    // prefab shield
+    [SerializeField]
+    GameObject prefabShield;
+
     [SerializeField]
     Slider healthBar;
 
@@ -29,11 +37,15 @@ public class Alien : MonoBehaviour
     [SerializeField]
     GameObject prefabShipLaserExplosion;
 
-    // chance of holding money and which type
+    // chance of what holding
     bool hasCoin = false;
     bool hasCoinBag = false;
+    bool hasHeart = false;
+    bool hasShield = false;
     int coinCount;
     int coinBagCount;
+    int heartCount;
+    int shieldCount;
 
     // alien movement support
     Timer moveTimer;
@@ -75,8 +87,8 @@ public class Alien : MonoBehaviour
         // set healthbar value
         healthBar.value = 1;
 
-        // get whether or not holding money and which type
-        MoneyChance();
+        // get what holding
+        PickupChance();
 
         // set trait values
         SetTraitValues();
@@ -145,31 +157,45 @@ public class Alien : MonoBehaviour
         // play explosion sound
         AudioManager.Play(AudioName.Explosion);
 
-        if (gameObject.tag == "Alien1" || gameObject.tag == "Alien2")
+        if (gameObject.CompareTag("Alien1") || gameObject.CompareTag("Alien2"))
         {
             // check if holding money
             if (hasCoin)
             {
                 // create coin and get moving
-                GameObject coin = Instantiate(prefabCoin, transform.position, Quaternion.identity);
-                coin.GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, -3f), ForceMode2D.Impulse);
+                SpawnPickups(prefabCoin);
             }
             else if (hasCoinBag)
             {
                 // create coin bag and get moving
-                GameObject coinBag = Instantiate(prefabCoinBag, transform.position, Quaternion.identity);
-                coinBag.GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, -3f), ForceMode2D.Impulse);
+                SpawnPickups(prefabCoinBag);
+            }
+            else if (hasHeart)
+            {
+                // create heart and get moving
+                SpawnPickups(prefabHeart);
+            }
+            else if (hasShield)
+            {
+                // create shield and get moving
+                SpawnPickups(prefabShield);
             }
 
             // spawn explosions
-            if (gameObject.tag == "Alien1")
+            if (gameObject.CompareTag("Alien1"))
             {
                 Instantiate(prefabAlienExplosion, transform.position, Quaternion.identity);
+
+                // add alien defeated to player prefs
+                PlayerPrefs.SetInt(PlayerPrefNames.RedsDefeated.ToString(), PlayerPrefs.GetInt(PlayerPrefNames.RedsDefeated.ToString(), 0) + 1);
             }
-            else if (gameObject.tag == "Alien2")
+            else if (gameObject.CompareTag("Alien2"))
             {
                 Instantiate(prefabAlienExplosion, new Vector3(transform.position.x - (alienWidth / 6), transform.position.y, 0f), Quaternion.identity);
                 Instantiate(prefabAlienExplosion, new Vector3(transform.position.x + (alienWidth / 6), transform.position.y, 0f), Quaternion.identity);
+
+                // add alien defeated to player prefs
+                PlayerPrefs.SetInt(PlayerPrefNames.GreensDefeated.ToString(), PlayerPrefs.GetInt(PlayerPrefNames.GreensDefeated.ToString(), 0) + 1);
             }
             // destroy alien
             Destroy(gameObject);
@@ -177,20 +203,34 @@ public class Alien : MonoBehaviour
             // add alien defeated to player prefs
             PlayerPrefs.SetInt(PlayerPrefNames.AliensDefeated.ToString(), PlayerPrefs.GetInt(PlayerPrefNames.AliensDefeated.ToString(), 0) + 1);
         }
-        else if (gameObject.tag == "Alien3")
+        else if (gameObject.CompareTag("Alien3"))
         {
+            // spawn coins
             for (int i = 1; i <= coinCount; i++)
             {
                 // create coin and get moving
-                GameObject coin = Instantiate(prefabCoin, new Vector3(Random.Range(transform.position.x - (alienWidth / 2f), transform.position.x + (alienWidth / 2f)), transform.position.y, 0f), Quaternion.identity);
-                coin.GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, -3f), ForceMode2D.Impulse);
+                SpawnPickups(prefabCoin);
             }
 
+            // spawn coin bags
             for (int i = 1; i <= coinBagCount; i++)
             {
                 // create coin bag and get moving
-                GameObject coinBag = Instantiate(prefabCoinBag, new Vector3(Random.Range(transform.position.x - (alienWidth / 2f), transform.position.x + (alienWidth / 2f)), transform.position.y, 0f), Quaternion.identity);
-                coinBag.GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, -3f), ForceMode2D.Impulse);
+                SpawnPickups(prefabCoinBag);
+            }
+
+            // spawn hearts
+            for (int i = 1; i <= heartCount; i++)
+            {
+                // create heart and get moving
+                SpawnPickups(prefabHeart);
+            }
+
+            // spawn shields
+            for (int i = 1; i <= shieldCount; i++)
+            {
+                // create shield and get moving
+                SpawnPickups(prefabShield);
             }
 
             // spawn explosions
@@ -204,6 +244,9 @@ public class Alien : MonoBehaviour
 
             // destroy alien
             Destroy(gameObject);
+
+            // add alien defeated to player prefs
+            PlayerPrefs.SetInt(PlayerPrefNames.AliensDefeated.ToString(), PlayerPrefs.GetInt(PlayerPrefNames.AliensDefeated.ToString(), 0) + 1);
 
             // add mother ship defeated to player prefs
             PlayerPrefs.SetInt(PlayerPrefNames.MotherShipsDefeated.ToString(), PlayerPrefs.GetInt(PlayerPrefNames.MotherShipsDefeated.ToString(), 0) + 1);
@@ -250,7 +293,7 @@ public class Alien : MonoBehaviour
     private void HandleShootTimerFinished()
     {
         // shoot lasers
-        if (gameObject.tag == "Alien1")
+        if (gameObject.CompareTag("Alien1"))
         {
             // spawn laser and get moving
             Instantiate(prefabAlienLaser, new Vector3(transform.position.x, transform.position.y - (alienHeight / 2f), 0f), Quaternion.identity);
@@ -258,7 +301,7 @@ public class Alien : MonoBehaviour
             // set new cooldown
             shootTimer.Duration = Random.Range(ConfigUtils.Alien1LaserCooldownMin, ConfigUtils.Alien1LaserCooldownMax);
         }
-        else if (gameObject.tag == "Alien2")
+        else if (gameObject.CompareTag("Alien2"))
         {
             // spawn lasers and get moving
             Instantiate(prefabAlienLaser, new Vector3(transform.position.x, transform.position.y - (alienHeight / 2f), 0f), Quaternion.identity);
@@ -268,7 +311,7 @@ public class Alien : MonoBehaviour
             // set new cooldown
             shootTimer.Duration = Random.Range(ConfigUtils.Alien2LaserCooldownMin, ConfigUtils.Alien2LaserCooldownMax);
         }
-        else if (gameObject.tag == "Alien3")
+        else if (gameObject.CompareTag("Alien3"))
         {
             // spawn lasers and get moving
             Instantiate(prefabAlienLaser, new Vector3(transform.position.x, transform.position.y - (alienHeight / 2f), 0f), Quaternion.identity);
@@ -286,44 +329,63 @@ public class Alien : MonoBehaviour
     }
 
     /// <summary>
-    /// Gets whether holding money or not and what type
+    /// Gets what holding
     /// </summary>
-    private void MoneyChance()
+    private void PickupChance()
     {
-        if (gameObject.tag == "Alien1" || gameObject.tag == "Alien2")
+        if (gameObject.CompareTag("Alien1") || gameObject.CompareTag("Alien2"))
         {
-            float hasMoney = Random.Range(0, 11);
-            if (hasMoney <= 8)
+            int hasPickup = Random.Range(0, 11);
+            if (hasPickup <= 8)
             {
-                float hasType = Random.Range(0, 11);
-                if (gameObject.tag == "Alien1")
+                int hasType = Random.Range(0, 21);
+                if (gameObject.CompareTag("Alien1"))
                 {
-                    if (hasType <= 8)
+                    if (hasType <= 1)
+                    {
+                        hasHeart = true;
+                    }
+                    else if (hasType > 1 && hasType <= 3)
+                    {
+                        hasShield = true;
+                    }
+                    else if (hasType > 3 && hasType <= 17)
                     {
                         hasCoin = true;
                     }
-                    else
+                    else if (hasType > 17 && hasType <= 20)
                     {
                         hasCoinBag = true;
                     }
                 }
-                else if (gameObject.tag == "Alien2")
+                // higher change of heart, shield, and coin bag
+                else if (gameObject.CompareTag("Alien2"))
                 {
-                    if (hasType <= 6)
+                    if (hasType <= 3)
+                    {
+                        hasHeart = true;
+                    }
+                    else if (hasType > 3 && hasType <= 7)
+                    {
+                        hasShield = true;
+                    }
+                    else if (hasType > 7 && hasType <= 14)
                     {
                         hasCoin = true;
                     }
-                    else
+                    else if (hasType > 14 && hasType <= 20)
                     {
                         hasCoinBag = true;
                     }
                 }
             }
         }
-        else if (gameObject.tag == "Alien3")
+        else if (gameObject.CompareTag("Alien3"))
         {
             coinCount = Random.Range(10, 21);
             coinBagCount = Random.Range(4, 11);
+            heartCount = Random.Range(1, 4);
+            shieldCount = Random.Range(1, 4);
         }
     }
 
@@ -333,19 +395,19 @@ public class Alien : MonoBehaviour
     private void SetTraitValues()
     {
         // get laser speed, move speed, and health
-        if (gameObject.tag == "Alien1")
+        if (gameObject.CompareTag("Alien1"))
         {
             moveSpeed = ConfigUtils.Alien1MoveSpeed;
             healthRemaining = ConfigUtils.Alien1LifeAmount;
             maxHealth = healthRemaining;
         }
-        else if (gameObject.tag == "Alien2")
+        else if (gameObject.CompareTag("Alien2"))
         {
             moveSpeed = ConfigUtils.Alien2MoveSpeed;
             healthRemaining = ConfigUtils.Alien2LifeAmount;
             maxHealth = healthRemaining;
         }
-        else if (gameObject.tag == "Alien3")
+        else if (gameObject.CompareTag("Alien3"))
         {
             moveSpeed = ConfigUtils.Alien3MoveSpeed;
             healthRemaining = ConfigUtils.Alien3LifeAmount;
@@ -365,17 +427,17 @@ public class Alien : MonoBehaviour
         // initialize the shoot, move, and tracking timers
         shootTimer = gameObject.AddComponent<Timer>();
         moveTimer = gameObject.AddComponent<Timer>();
-        if (gameObject.tag == "Alien1")
+        if (gameObject.CompareTag("Alien1"))
         {
             shootTimer.Duration = Random.Range(ConfigUtils.Alien1LaserCooldownMin, ConfigUtils.Alien1LaserCooldownMax);
             moveTimer.Duration = ConfigUtils.Alien1MoveDelay;
         }
-        else if (gameObject.tag == "Alien2")
+        else if (gameObject.CompareTag("Alien2"))
         {
             shootTimer.Duration = Random.Range(ConfigUtils.Alien2LaserCooldownMin, ConfigUtils.Alien2LaserCooldownMax);
             moveTimer.Duration = ConfigUtils.Alien2MoveDelay;
         }
-        else if (gameObject.tag == "Alien3")
+        else if (gameObject.CompareTag("Alien3"))
         {
             shootTimer.Duration = Random.Range(ConfigUtils.Alien3LaserCooldownMin, ConfigUtils.Alien3LaserCooldownMax);
             moveTimer.Duration = ConfigUtils.Alien3MoveDelay;
@@ -390,6 +452,18 @@ public class Alien : MonoBehaviour
 
         // add timer as listener for move right event
         moveTimer.AddTimerFinishedListener(HandleMoveTimerFinished);
+
+    }
+
+    /// <summary>
+    /// Handles spwning pickups
+    /// </summary>
+    /// <param name="gameObject"></param>
+    private void SpawnPickups(GameObject gameObject)
+    {
+        // create pickup and get moving
+        GameObject pickup = Instantiate(gameObject, new Vector3(Random.Range(transform.position.x - (alienWidth / 2f), transform.position.x + (alienWidth / 2f)), transform.position.y, 0f), Quaternion.identity);
+        pickup.GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, -3f), ForceMode2D.Impulse);
 
     }
 

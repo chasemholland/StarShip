@@ -24,7 +24,11 @@ TagManager:
   - DecreaseLaserCooldown
   - IncreaseHealth
   - IncreaseMoveSpeed
+  - BackgroundMusic
   - ShipExplosion
+  - Heart
+  - Shield
+  - ShieldPulse
   layers:
   - Default
   - TransparentFX
@@ -61,6 +65,9 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Shield
+    uniqueID: 75583833
     locked: 0
   - name: Explosion
     uniqueID: 1005018025

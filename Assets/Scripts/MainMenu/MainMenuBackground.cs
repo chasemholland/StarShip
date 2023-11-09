@@ -29,7 +29,7 @@ public class MainMenuBackground : MonoBehaviour
         EventManager.AddListener(EventName.AddMoneyEvent, HandleAddMoneyEvent);
 
         // set up money text
-        moneyValue = PlayerPrefs.GetInt(PlayerPrefNames.PlayerMoney.ToString());
+        moneyValue = PlayerPrefs.GetFloat(PlayerPrefNames.PlayerMoney.ToString());
         moneyText.text = moneyTextPrefix + moneyValue.ToString();
 
     }
@@ -37,10 +37,10 @@ public class MainMenuBackground : MonoBehaviour
     private void Update()
     {
         // update money in main menu
-        if (moneyValue != PlayerPrefs.GetInt(PlayerPrefNames.PlayerMoney.ToString()))
+        if (moneyValue != PlayerPrefs.GetFloat(PlayerPrefNames.PlayerMoney.ToString()))
         {
             // set correct value
-            moneyValue = PlayerPrefs.GetInt(PlayerPrefNames.PlayerMoney.ToString());
+            moneyValue = PlayerPrefs.GetFloat(PlayerPrefNames.PlayerMoney.ToString());
 
             // set money text
             moneyText.text = moneyTextPrefix + moneyValue.ToString();
@@ -55,7 +55,7 @@ public class MainMenuBackground : MonoBehaviour
     /// Handles adding money event
     /// </summary>
     /// <param name="amount"></param>
-    private void HandleAddMoneyEvent(int amount)
+    private void HandleAddMoneyEvent(float amount)
     {
         // increment money
         moneyValue += amount;

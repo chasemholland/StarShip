@@ -7,6 +7,8 @@ using UnityEngine;
 /// </summary>
 public enum AudioName
 {
+    Ambient,
+    GamePlayAmbient,
     ShipLaser,
     ShipLaserHit,
     Pickup,

@@ -6,6 +6,6 @@ using UnityEngine.Events;
 /// <summary>
 /// Increase health event
 /// </summary>
-public class IncreaseHealthEvent : UnityEvent<int>
+public class IncreaseHealthEvent : UnityEvent<float>
 {
 }

@@ -22,6 +22,14 @@ public class ConfigData
     #region Properties
 
     /// <summary>
+    /// Gets the initial max shield value
+    /// </summary>
+    public float Ship1MaxShield
+    {
+        get { return values[ConfigDataName.Ship1MaxShield]; }
+    }
+
+    /// <summary>
     /// Gets the basic ship laser shoot cooldown
     /// </summary>
     public float Ship1LaserCooldown
@@ -349,6 +357,7 @@ public class ConfigData
         values.Clear();
 
         // set all the default values
+        values.Add(ConfigDataName.Ship1MaxShield, 3);
         values.Add(ConfigDataName.Ship1LaserCooldown, 0.5f);
         values.Add(ConfigDataName.Ship1LaserSpeed, 8);
         values.Add(ConfigDataName.Ship1MoveSpeed, 10);

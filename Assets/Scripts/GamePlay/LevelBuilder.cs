@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// Level builder
 /// </summary>
-public class LevelBuilder : IntEventInvoker
+public class LevelBuilder : FloatEventInvoker
 {
     #region Fields
 

@@ -8,6 +8,7 @@ using UnityEngine;
 public enum PlayerPrefNames
 {
     PlayerMoney,
+    ShipMaxShield,
     ShipLaserSpeed,
     ShipLaserDamage,
     ShipLaserCooldown,
@@ -25,6 +26,8 @@ public enum PlayerPrefNames
     LaserSpeedMultiplier,
     RoundsCompleted,
     AliensDefeated,
+    RedsDefeated,
+    GreensDefeated,
     MotherShipsDefeated,
     BonusCoins
 }

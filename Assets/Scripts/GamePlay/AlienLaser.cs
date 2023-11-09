@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 /// <summary>
 /// Alien projectiles
 /// </summary>
-public class AlienLaser : IntEventInvoker
+public class AlienLaser : FloatEventInvoker
 {
     #region Fields
 

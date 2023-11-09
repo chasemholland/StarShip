@@ -7,13 +7,13 @@ using System;
 /// <summary>
 /// Store menu
 /// </summary>
-public class Store : IntEventInvoker
+public class Store : FloatEventInvoker
 {
     #region Fields
 
     [SerializeField]
     TextMeshProUGUI moneyValueText;
-    int moneyValue;
+    float moneyValue;
     string moneyValuePrefix = "SPACE COINS: ";
 
     [SerializeField]
@@ -197,10 +197,10 @@ public class Store : IntEventInvoker
             laserSpeedMultiplier.text = laserSpeedMultiplierPrefix + laserSpeedMultiplierValue.ToString();
         }
 
-        if (moneyValue != PlayerPrefs.GetInt(PlayerPrefNames.PlayerMoney.ToString()))
+        if (moneyValue != PlayerPrefs.GetFloat(PlayerPrefNames.PlayerMoney.ToString()))
         {
             // set money in player prefs
-            PlayerPrefs.SetInt(PlayerPrefNames.PlayerMoney.ToString(), moneyValue);
+            PlayerPrefs.SetFloat(PlayerPrefNames.PlayerMoney.ToString(), moneyValue);
 
             // set money text
             moneyValueText.text = moneyValuePrefix + moneyValue.ToString();
@@ -251,7 +251,7 @@ public class Store : IntEventInvoker
     private void SetValues()
     {
         // set money value
-        moneyValue = PlayerPrefs.GetInt(PlayerPrefNames.PlayerMoney.ToString(), 0);
+        moneyValue = PlayerPrefs.GetFloat(PlayerPrefNames.PlayerMoney.ToString(), 0);
 
         // set player stats values
         healthStatValue = ConfigUtils.Ship1LifeAmount * (1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipLifeAmount.ToString(), 0));
@@ -277,7 +277,7 @@ public class Store : IntEventInvoker
 
     private void SetStoreButtons()
     {
-        if (PlayerPrefs.GetInt(PlayerPrefNames.PlayerMoney.ToString()) < healthCostValue)
+        if (PlayerPrefs.GetFloat(PlayerPrefNames.PlayerMoney.ToString()) < healthCostValue)
         {
             // disable the health button
             Button button = GameObject.FindGameObjectWithTag("IncreaseHealth").GetComponent<Button>();
@@ -292,7 +292,7 @@ public class Store : IntEventInvoker
             button.interactable = true;
         }
 
-        if (PlayerPrefs.GetInt(PlayerPrefNames.PlayerMoney.ToString()) < moveCostValue)
+        if (PlayerPrefs.GetFloat(PlayerPrefNames.PlayerMoney.ToString()) < moveCostValue)
         {
             // disable the move speed button
             Button button = GameObject.FindGameObjectWithTag("IncreaseMoveSpeed").GetComponent<Button>();
@@ -307,7 +307,7 @@ public class Store : IntEventInvoker
             button.interactable = true;
         }
 
-        if (PlayerPrefs.GetInt(PlayerPrefNames.PlayerMoney.ToString()) < laserDamageCostValue)
+        if (PlayerPrefs.GetFloat(PlayerPrefNames.PlayerMoney.ToString()) < laserDamageCostValue)
         {
             // diasable the laser damage button
             Button button = GameObject.FindGameObjectWithTag("IncreaseLaserDamage").GetComponent<Button>();
@@ -322,7 +322,7 @@ public class Store : IntEventInvoker
             button.interactable = true;
         }
 
-        if (PlayerPrefs.GetInt(PlayerPrefNames.PlayerMoney.ToString()) < laserCooldownCostValue)
+        if (PlayerPrefs.GetFloat(PlayerPrefNames.PlayerMoney.ToString()) < laserCooldownCostValue)
         {
             // disable the laser cooldown button
             Button button = GameObject.FindGameObjectWithTag("DecreaseLaserCooldown").GetComponent<Button>();
@@ -337,7 +337,7 @@ public class Store : IntEventInvoker
             button.interactable = true;
         }
 
-        if (PlayerPrefs.GetInt(PlayerPrefNames.PlayerMoney.ToString()) < laserSpeedCostValue)
+        if (PlayerPrefs.GetFloat(PlayerPrefNames.PlayerMoney.ToString()) < laserSpeedCostValue)
         {
             // disable the laser speed button
             Button button = GameObject.FindGameObjectWithTag("IncreaseLaserSpeed").GetComponent<Button>();
@@ -377,7 +377,7 @@ public class Store : IntEventInvoker
         AudioManager.Play(AudioName.Select);
 
         // decrease money
-        moneyValue -= (int)PlayerPrefs.GetFloat(PlayerPrefNames.LaserSpeedCost.ToString());
+        moneyValue -= MathF.Round(PlayerPrefs.GetFloat(PlayerPrefNames.LaserSpeedCost.ToString()), 0);
 
         // set laser speed multiplier
         PlayerPrefs.SetFloat(PlayerPrefNames.ShipLaserSpeed.ToString(), PlayerPrefs.GetFloat(PlayerPrefNames.ShipLaserSpeed.ToString()) + ConfigUtils.UpgradeAmount);
@@ -399,7 +399,7 @@ public class Store : IntEventInvoker
         AudioManager.Play(AudioName.Select);
 
         // decrease money
-        moneyValue -= (int)PlayerPrefs.GetFloat(PlayerPrefNames.LaserDamageCost.ToString());
+        moneyValue -= MathF.Round(PlayerPrefs.GetFloat(PlayerPrefNames.LaserDamageCost.ToString()), 0);
 
         // set laser damage multiplier
         PlayerPrefs.SetFloat(PlayerPrefNames.ShipLaserDamage.ToString(), PlayerPrefs.GetFloat(PlayerPrefNames.ShipLaserDamage.ToString()) + ConfigUtils.UpgradeAmount);
@@ -421,7 +421,7 @@ public class Store : IntEventInvoker
         AudioManager.Play(AudioName.Select);
 
         // decrease money
-        moneyValue -= (int)PlayerPrefs.GetFloat(PlayerPrefNames.LaserCooldownCost.ToString());
+        moneyValue -= MathF.Round(PlayerPrefs.GetFloat(PlayerPrefNames.LaserCooldownCost.ToString()), 0);
 
         // set laser cooldown multiplier
         PlayerPrefs.SetFloat(PlayerPrefNames.ShipLaserCooldown.ToString(), PlayerPrefs.GetFloat(PlayerPrefNames.ShipLaserCooldown.ToString()) + ConfigUtils.UpgradeAmount);
@@ -443,7 +443,7 @@ public class Store : IntEventInvoker
         AudioManager.Play(AudioName.Select);
 
         // decrease money
-        moneyValue -= (int)PlayerPrefs.GetFloat(PlayerPrefNames.MoveCost.ToString());
+        moneyValue -= MathF.Round(PlayerPrefs.GetFloat(PlayerPrefNames.MoveCost.ToString()), 0);
 
         // set move speed multiplier
         PlayerPrefs.SetFloat(PlayerPrefNames.ShipMoveSpeed.ToString(), PlayerPrefs.GetFloat(PlayerPrefNames.ShipMoveSpeed.ToString()) + ConfigUtils.UpgradeAmount);
@@ -465,7 +465,7 @@ public class Store : IntEventInvoker
         AudioManager.Play(AudioName.Select);
 
         // decrease money
-        moneyValue -= (int)PlayerPrefs.GetFloat(PlayerPrefNames.HealthCost.ToString());
+        moneyValue -= MathF.Round(PlayerPrefs.GetFloat(PlayerPrefNames.HealthCost.ToString()), 0);
 
         // set health multiplier
         PlayerPrefs.SetFloat(PlayerPrefNames.ShipLifeAmount.ToString(), PlayerPrefs.GetFloat(PlayerPrefNames.ShipLifeAmount.ToString()) + ConfigUtils.UpgradeAmount);

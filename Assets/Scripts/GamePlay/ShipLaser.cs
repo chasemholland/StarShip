@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Player Projectiles
 /// </summary>
-public class ShipLaser : IntEventInvoker
+public class ShipLaser : FloatEventInvoker
 {
     #region Fields
 

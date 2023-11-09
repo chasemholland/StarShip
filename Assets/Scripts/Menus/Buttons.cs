@@ -23,7 +23,7 @@ public class Buttons : MonoBehaviour
         // restart button only active if player has money
         if (SceneManager.GetActiveScene().name == "MainMenu" && GameObject.FindGameObjectWithTag("StoreMenu") == null)
         {
-            if (PlayerPrefs.GetInt(PlayerPrefNames.PlayerMoney.ToString()) <= 0)
+            if (PlayerPrefs.GetFloat(PlayerPrefNames.PlayerMoney.ToString()) <= 0)
             {
                 GameObject.FindGameObjectWithTag("RestartButton").SetActive(false);
             }
@@ -42,6 +42,12 @@ public class Buttons : MonoBehaviour
         // play select
         AudioManager.Play(AudioName.Select);
 
+        // play background music
+        if (LoopingAudioManager.Playing == AudioName.Ambient)
+        {
+            LoopingAudioManager.Switch(AudioName.GamePlayAmbient);
+        }
+
         Time.timeScale = 1.0f;
         SceneManager.LoadScene("GamePlay");
     }
@@ -55,7 +61,7 @@ public class Buttons : MonoBehaviour
         AudioManager.Play(AudioName.Select);
 
         // reset player prefs
-        PlayerPrefs.SetInt(PlayerPrefNames.PlayerMoney.ToString(), 0);
+        PlayerPrefs.SetFloat(PlayerPrefNames.PlayerMoney.ToString(), 0);
         PlayerPrefs.SetFloat(PlayerPrefNames.ShipLaserSpeed.ToString(), 0);
         PlayerPrefs.SetFloat(PlayerPrefNames.ShipLaserDamage.ToString(), 0);
         PlayerPrefs.SetFloat(PlayerPrefNames.ShipLaserCooldown.ToString(), 0);
@@ -98,6 +104,9 @@ public class Buttons : MonoBehaviour
     {
         // play select
         AudioManager.Play(AudioName.Select);
+
+        // play ambient music
+        LoopingAudioManager.Switch(AudioName.Ambient);
 
         SceneManager.LoadScene("MainMenu");
     }
