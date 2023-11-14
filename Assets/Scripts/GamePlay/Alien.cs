@@ -84,9 +84,6 @@ public class Alien : MonoBehaviour
         alienWidth = alienCollider.size.x;
         alienHeight = alienCollider.size.y;
 
-        // set healthbar value
-        healthBar.value = 1;
-
         // get what holding
         PickupChance();
 
@@ -137,6 +134,12 @@ public class Alien : MonoBehaviour
             // adjust healthbar
             healthBar.value = healthRemaining / maxHealth;
 
+            // store mothership health for next waves
+            if (gameObject.CompareTag("Alien3"))
+            {
+                PlayerPrefs.SetFloat(PlayerPrefNames.MothershipLifeAmount.ToString(), PlayerPrefs.GetFloat(PlayerPrefNames.MothershipLifeAmount.ToString()) - playerDamage);
+            }
+
             // check if alien dead
             if (healthRemaining <= 0)
             {
@@ -156,6 +159,9 @@ public class Alien : MonoBehaviour
     {
         // play explosion sound
         AudioManager.Play(AudioName.Explosion);
+
+        // add to lifetime aliens defeated
+        PlayerPrefs.SetInt(PlayerPrefNames.LifetimeAliensDefeated.ToString(), PlayerPrefs.GetInt(PlayerPrefNames.LifetimeAliensDefeated.ToString(), 0) + 1);
 
         if (gameObject.CompareTag("Alien1") || gameObject.CompareTag("Alien2"))
         {
@@ -250,6 +256,9 @@ public class Alien : MonoBehaviour
 
             // add mother ship defeated to player prefs
             PlayerPrefs.SetInt(PlayerPrefNames.MotherShipsDefeated.ToString(), PlayerPrefs.GetInt(PlayerPrefNames.MotherShipsDefeated.ToString(), 0) + 1);
+
+            // set alien store unlocked
+            PlayerPrefs.SetInt(PlayerPrefNames.AlienStoreUnlocked.ToString(), 1);
         }
     }
 
@@ -410,9 +419,12 @@ public class Alien : MonoBehaviour
         else if (gameObject.CompareTag("Alien3"))
         {
             moveSpeed = ConfigUtils.Alien3MoveSpeed;
-            healthRemaining = ConfigUtils.Alien3LifeAmount;
-            maxHealth = healthRemaining;
+            healthRemaining = PlayerPrefs.GetFloat(PlayerPrefNames.MothershipLifeAmount.ToString());
+            maxHealth = ConfigUtils.Alien3LifeAmount;
         }
+
+        // set healthbar value
+        healthBar.value = healthRemaining / maxHealth;
 
         // set initial move direction
         moveDirection = (Random.Range(0, 2) * 2 - 1);
@@ -462,7 +474,10 @@ public class Alien : MonoBehaviour
     private void SpawnPickups(GameObject gameObject)
     {
         // create pickup and get moving
-        GameObject pickup = Instantiate(gameObject, new Vector3(Random.Range(transform.position.x - (alienWidth / 2f), transform.position.x + (alienWidth / 2f)), transform.position.y, 0f), Quaternion.identity);
+        GameObject pickup = Instantiate(gameObject, new Vector3(
+            Random.Range(transform.position.x - (alienWidth / 2f), transform.position.x + (alienWidth / 2f)), 
+            Random.Range(transform.position.y - (alienHeight / 2f), transform.position.y + (alienHeight / 2f)), 0f), 
+            Quaternion.identity);
         pickup.GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, -3f), ForceMode2D.Impulse);
 
     }

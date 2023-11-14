@@ -15,5 +15,6 @@ public enum EventName
     DecreaseHealthEvent,
     IncreaseShieldEvent,
     DecreaseShieldEvent,
-    InvasionCompleteEvent
+    InvasionCompleteEvent,
+    StartTargetingEvent
 }

@@ -9,6 +9,12 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 261bd8b7975c20940a756a16ffcd5314
   - enabled: 1
+    path: Assets/Scenes/Store.unity
+    guid: 087f3074aee3b794eb51d09d03b44131
+  - enabled: 1
+    path: Assets/Scenes/AlienStore.unity
+    guid: f8edd0e8de04e8b48a16dbf174829875
+  - enabled: 1
     path: Assets/Scenes/GamePlay.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1

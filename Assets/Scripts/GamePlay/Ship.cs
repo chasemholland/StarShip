@@ -146,7 +146,7 @@ public class Ship : FloatEventInvoker
                 AudioManager.Play(AudioName.ShipLaser);
 
                 GameObject laser = Instantiate(prefabShipLaser1, new Vector3(transform.position.x, transform.position.y + (shipHeight / 2), 0f), Quaternion.identity);
-                laser.GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, laserSpeed), ForceMode2D.Impulse);
+                //laser.GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, laserSpeed), ForceMode2D.Impulse);
 
                 // check if timer has been started
                 if (!cooldownTimer.Running)

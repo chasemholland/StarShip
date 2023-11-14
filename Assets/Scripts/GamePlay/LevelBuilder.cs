@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// Level builder
@@ -92,6 +93,18 @@ public class LevelBuilder : FloatEventInvoker
             }
             
         }
+        
+        if (roundValue == 6 && 
+            PlayerPrefs.GetFloat(PlayerPrefNames.MothershipLifeAmount.ToString()) <= ConfigUtils.Alien3LifeAmount - (ConfigUtils.Alien3LifeAmount / 3))
+        {
+            Destroy(GameObject.FindWithTag("Alien3"));
+        }
+        else if (roundValue == 8 &&
+            PlayerPrefs.GetFloat(PlayerPrefNames.MothershipLifeAmount.ToString()) <= ConfigUtils.Alien3LifeAmount / 3)
+        {
+            Destroy(GameObject.FindWithTag("Alien3"));
+        }
+
     }
 
     #endregion
@@ -138,16 +151,12 @@ public class LevelBuilder : FloatEventInvoker
                 alienCount += 2;
                 break;
             case 7:
-                alienCount += 2;
                 break;
             case 8:
-                alienCount += 2;
                 break;
             case 9:
-                alienCount += 2;
                 break;
             case 10:
-                alienCount += 2;
                 break;
             case 11:
                 alienInitialCount += 2;
@@ -190,7 +199,7 @@ public class LevelBuilder : FloatEventInvoker
                 } 
             }
         }
-        else if (round >= 5 && round < 7)
+        else if (round == 5)
         {
 
             // spawn aliens
@@ -210,9 +219,40 @@ public class LevelBuilder : FloatEventInvoker
                 }
             }
         }
-        else if (round >= 7 && round < 10)
+        else if (round == 6)
         {
+            // set mothership health
+            PlayerPrefs.SetFloat(PlayerPrefNames.MothershipLifeAmount.ToString(), ConfigUtils.Alien3LifeAmount);
 
+            // spawn mother ship round 1
+            Instantiate(prefabAlien3, new Vector3(0f, topSpawn - 1.5f, 0f), Quaternion.identity);
+        }
+        else if (round == 7)
+        {
+            // spawn aliens
+            for (int i = 0; i < alienCount; i++)
+            {
+                // get chance of alien type
+                int alienType = Random.Range(0, 11);
+
+                // spawn alien
+                if (alienType >= 5)
+                {
+                    Instantiate(prefabAlien2, new Vector3(Random.Range(leftSpawn, rightSpawn), Random.Range(bottomSpawn, topSpawn), 0f), Quaternion.identity);
+                }
+                else
+                {
+                    Instantiate(prefabAlien1, new Vector3(Random.Range(leftSpawn, rightSpawn), Random.Range(bottomSpawn, topSpawn), 0f), Quaternion.identity);
+                }
+            }
+        }
+        else if (round == 8)
+        {
+            // spawn mother ship round 2
+            Instantiate(prefabAlien3, new Vector3(0f, topSpawn - 1.5f, 0f), Quaternion.identity);
+        }
+        else if (round == 9)
+        {
             // spawn aliens
             for (int i = 0; i < alienCount; i++)
             {
@@ -231,10 +271,9 @@ public class LevelBuilder : FloatEventInvoker
             }
         }
         else
-        { 
-            // spawn mother ship
+        {
+            // spawn mother ship final fight
             Instantiate(prefabAlien3, new Vector3(0f, topSpawn - 1.5f, 0f), Quaternion.identity);
-
         }
     }
 
@@ -243,6 +282,11 @@ public class LevelBuilder : FloatEventInvoker
     /// </summary>
     private void HandleRoundTimerFinishedEvent()
     {
+        // destroy target gameobject
+        if (GameObject.FindWithTag("Target") != null)
+        {
+            Destroy(GameObject.FindWithTag("Target"));
+        }
 
         // add to rounds completed
         unityEvents[EventName.AddRoundEvent].Invoke(1);

@@ -363,10 +363,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f52ab356e067f141b767b97f0c902bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabAlien1: {fileID: 4743225819189888078, guid: 6301918e8ada6564c819ef80a2dbe7b9, type: 3}
-  prefabAlien2: {fileID: 423236760289679836, guid: c778b524c85dcb744a1fe0aeb5ebba96, type: 3}
+  prefabAlien1: {fileID: 2424204996059655537, guid: ca98d038071eb1243bd28aa7e9695f08, type: 3}
+  prefabAlien2: {fileID: 5923463157246280820, guid: ed0ef8c9fd9872f4fa9423c2449d213e, type: 3}
   prefabAlien3: {fileID: 5150664418362471698, guid: c50cb59b66b976045bd30702e3004d38, type: 3}
   prefabShip1: {fileID: 1520474774458000864, guid: 2eec3e35e2bb4a349bf010d460e3cca1, type: 3}
+  prefabTarget: {fileID: 1105205541662087880, guid: c08083c4fd8b33b4bbac259cd385d938, type: 3}
 --- !u!114 &519420036
 MonoBehaviour:
   m_ObjectHideFlags: 0

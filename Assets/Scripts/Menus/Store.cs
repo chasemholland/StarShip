@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Store menu
@@ -365,7 +366,8 @@ public class Store : FloatEventInvoker
         // play select
         AudioManager.Play(AudioName.Select);
 
-        Destroy(GameObject.FindGameObjectWithTag("StoreMenu"));
+        // load main menu
+        SceneManager.LoadScene("MainMenu");
     }
 
     /// <summary>

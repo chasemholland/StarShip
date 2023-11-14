@@ -62,11 +62,19 @@ public class ConfigData
     }
 
     /// <summary>
-    /// Gets the laser1 damage
+    /// Gets the laser damage
     /// </summary>
     public float Ship1LaserDamage
     {
         get { return values[ConfigDataName.Ship1LaserDamage]; }
+    }
+
+    /// <summary>
+    /// Gets the targeting chance
+    /// </summary>
+    public float Ship1TargetingChance
+    {
+        get { return values[ConfigDataName.Ship1TargetingChance]; }
     }
 
     /// <summary>
@@ -278,6 +286,22 @@ public class ConfigData
     }
 
     /// <summary>
+    /// Gets the targeting system cost
+    /// </summary>
+    public float TargetingSystemCost
+    {
+        get { return values[ConfigDataName.TargetingSystemCost]; }
+    }
+
+    /// <summary>
+    /// Gets the targeting chance cost
+    /// </summary>
+    public float TargetingChanceCost
+    {
+        get { return values[ConfigDataName.TargetingChanceCost]; }
+    }
+
+    /// <summary>
     /// Gets the updgrade amount
     /// </summary>
     public float UpgradeAmount
@@ -363,6 +387,7 @@ public class ConfigData
         values.Add(ConfigDataName.Ship1MoveSpeed, 10);
         values.Add(ConfigDataName.Ship1LifeAmount, 6);
         values.Add(ConfigDataName.Ship1LaserDamage, 1);
+        values.Add(ConfigDataName.Ship1TargetingChance, 5);
         values.Add(ConfigDataName.Alien1LaserDamage, 0.5f);
         values.Add(ConfigDataName.Alien1LaserCooldownMin, 3);
         values.Add(ConfigDataName.Alien1LaserCooldownMax, 6);
@@ -389,6 +414,8 @@ public class ConfigData
         values.Add(ConfigDataName.LaserSpeedCost, 10);
         values.Add(ConfigDataName.MoveSpeedCost, 10);
         values.Add(ConfigDataName.LifeAmountCost, 10);
+        values.Add(ConfigDataName.TargetingSystemCost, 2000);
+        values.Add(ConfigDataName.TargetingChanceCost, 10);
         values.Add(ConfigDataName.UpgradeAmount, 0.25f);
         values.Add(ConfigDataName.UpgradeCostMultiplier, 1.75f);
     }

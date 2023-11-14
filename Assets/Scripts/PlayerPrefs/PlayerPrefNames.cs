@@ -14,6 +14,7 @@ public enum PlayerPrefNames
     ShipLaserCooldown,
     ShipMoveSpeed,
     ShipLifeAmount,
+    MothershipLifeAmount,
     HealthCost,
     MoveCost,
     LaserDamageCost,
@@ -25,9 +26,16 @@ public enum PlayerPrefNames
     LaserCoolodwnMultiplier,
     LaserSpeedMultiplier,
     RoundsCompleted,
+    LifetimeAliensDefeated,
     AliensDefeated,
     RedsDefeated,
     GreensDefeated,
     MotherShipsDefeated,
-    BonusCoins
+    BonusCoins,
+
+
+    AlienStoreUnlocked,
+    HasTargetingSystem,
+    TargetingChanceAmount,
+    TargetingChanceCost
 }

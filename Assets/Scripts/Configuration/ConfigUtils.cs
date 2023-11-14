@@ -65,6 +65,14 @@ public static class ConfigUtils
     }
 
     /// <summary>
+    /// Gets the targeting chance
+    /// </summary>
+    public static float Ship1TargetingChance
+    {
+        get { return configData.Ship1TargetingChance; }
+    }
+
+    /// <summary>
     /// Gets alien laser damage
     /// </summary>
     public static float Alien1LaserDamage
@@ -270,6 +278,22 @@ public static class ConfigUtils
     public static float LifeAmountCost
     {
         get { return configData.LifeAmountCost; }
+    }
+
+    /// <summary>
+    /// Gets the targeting system cost
+    /// </summary>
+    public static float TargetingSystemCost
+    {
+        get { return configData.TargetingSystemCost; }
+    }
+
+    /// <summary>
+    /// Gets the targeting chance cost
+    /// </summary>
+    public static float TargetingChanceCost
+    {
+        get { return configData.TargetingChanceCost;}
     }
 
     /// <summary>

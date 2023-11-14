@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 /// <summary>
 /// Button support
@@ -11,9 +12,6 @@ public class Buttons : MonoBehaviour
     [SerializeField]
     Canvas prefabPauseMenu;
 
-    [SerializeField]
-    Canvas prefabStoreMenu;
-
     #endregion
 
     #region Methods
@@ -21,15 +19,34 @@ public class Buttons : MonoBehaviour
     private void Start()
     {
         // restart button only active if player has money
-        if (SceneManager.GetActiveScene().name == "MainMenu" && GameObject.FindGameObjectWithTag("StoreMenu") == null)
+        if (SceneManager.GetActiveScene().name == "MainMenu")
         {
-            if (PlayerPrefs.GetFloat(PlayerPrefNames.PlayerMoney.ToString()) <= 0)
+            // set restart button
+            if (PlayerPrefs.GetInt(PlayerPrefNames.LifetimeAliensDefeated.ToString()) > 0)
             {
-                GameObject.FindGameObjectWithTag("RestartButton").SetActive(false);
+                Button button = GameObject.FindGameObjectWithTag("Restart").GetComponent<Button>();
+                button.enabled = true;
+                button.interactable = true;
             }
             else
             {
-                GameObject.FindGameObjectWithTag("RestartButton").SetActive(true);
+                Button button = GameObject.FindGameObjectWithTag("Restart").GetComponent<Button>();
+                button.enabled = false;
+                button.interactable = false;
+            }
+
+            // set alien store button
+            if (PlayerPrefs.GetInt(PlayerPrefNames.AlienStoreUnlocked.ToString()) == 1)
+            {
+                Button button = GameObject.FindGameObjectWithTag("AlienStore").GetComponent<Button>();
+                button.enabled = true;
+                button.interactable = true;
+            }
+            else
+            {
+                Button button = GameObject.FindGameObjectWithTag("AlienStore").GetComponent<Button>();
+                button.enabled = false;
+                button.interactable = false;
             }
         }
     }
@@ -39,6 +56,7 @@ public class Buttons : MonoBehaviour
     /// </summary>
     public void HandlePlayButtonOnClickEvent()
     {
+        PlayerPrefs.SetFloat(PlayerPrefNames.PlayerMoney.ToString(), 100000);
         // play select
         AudioManager.Play(AudioName.Select);
 
@@ -47,6 +65,13 @@ public class Buttons : MonoBehaviour
         {
             LoopingAudioManager.Switch(AudioName.GamePlayAmbient);
         }
+        
+        // reset gameplay values
+        PlayerPrefs.SetInt(PlayerPrefNames.RoundsCompleted.ToString(), 0);
+        PlayerPrefs.SetInt(PlayerPrefNames.AliensDefeated.ToString(), 0);
+        PlayerPrefs.SetInt(PlayerPrefNames.RedsDefeated.ToString(), 0);
+        PlayerPrefs.SetInt(PlayerPrefNames.GreensDefeated.ToString(), 0);
+        PlayerPrefs.SetInt(PlayerPrefNames.MotherShipsDefeated.ToString(), 0);
 
         Time.timeScale = 1.0f;
         SceneManager.LoadScene("GamePlay");
@@ -61,20 +86,32 @@ public class Buttons : MonoBehaviour
         AudioManager.Play(AudioName.Select);
 
         // reset player prefs
+        PlayerPrefs.SetInt(PlayerPrefNames.LifetimeAliensDefeated.ToString(), 0);
+        PlayerPrefs.SetInt(PlayerPrefNames.AlienStoreUnlocked.ToString(), 0);
         PlayerPrefs.SetFloat(PlayerPrefNames.PlayerMoney.ToString(), 0);
         PlayerPrefs.SetFloat(PlayerPrefNames.ShipLaserSpeed.ToString(), 0);
         PlayerPrefs.SetFloat(PlayerPrefNames.ShipLaserDamage.ToString(), 0);
         PlayerPrefs.SetFloat(PlayerPrefNames.ShipLaserCooldown.ToString(), 0);
         PlayerPrefs.SetFloat(PlayerPrefNames.ShipMoveSpeed.ToString(), 0);
         PlayerPrefs.SetFloat(PlayerPrefNames.ShipLifeAmount.ToString(), 0);
+        PlayerPrefs.SetFloat(PlayerPrefNames.TargetingChanceAmount.ToString(), 0);
         PlayerPrefs.SetFloat(PlayerPrefNames.HealthCost.ToString(), ConfigUtils.LifeAmountCost);
         PlayerPrefs.SetFloat(PlayerPrefNames.MoveCost.ToString(), ConfigUtils.MoveSpeedCost);
         PlayerPrefs.SetFloat(PlayerPrefNames.LaserDamageCost.ToString(), ConfigUtils.LaserDamageCost);
         PlayerPrefs.SetFloat(PlayerPrefNames.LaserSpeedCost.ToString(), ConfigUtils.LaserSpeedCost);
         PlayerPrefs.SetFloat(PlayerPrefNames.LaserCooldownCost.ToString(), ConfigUtils.LaserCooldownCost);
+        PlayerPrefs.SetFloat(PlayerPrefNames.TargetingChanceCost.ToString(), ConfigUtils.TargetingChanceCost);
+        PlayerPrefs.SetInt(PlayerPrefNames.HasTargetingSystem.ToString(), 0);
+        
+        // set restart inactive
+        Button button = GameObject.FindGameObjectWithTag("Restart").GetComponent<Button>();
+        button.enabled = false;
+        button.interactable = false;
 
-        // remove the restart button
-        GameObject.FindGameObjectWithTag("RestartButton").SetActive(false);
+        // set alien store button
+        Button buttonA = GameObject.FindGameObjectWithTag("AlienStore").GetComponent<Button>();
+        buttonA.enabled = false;
+        buttonA.interactable = false;
     }
 
     /// <summary>
@@ -124,14 +161,27 @@ public class Buttons : MonoBehaviour
     }
 
     /// <summary>
-    /// Handles pause menu store button click
+    /// Handles store button click
     /// </summary>
     public void HandleStoreButtonOnClickEvent()
     {
         // play select
         AudioManager.Play(AudioName.Select);
 
-        Instantiate(prefabStoreMenu);
+        // load store scene
+        SceneManager.LoadScene("Store");
+    }
+
+    /// <summary>
+    /// Handles alien store button click
+    /// </summary>
+    public void HandleAlienStoreButtonOnClickEvent()
+    {
+        // play select
+        AudioManager.Play(AudioName.Select);
+
+        // load alien store
+        SceneManager.LoadScene("AlienStore");
     }
 
     /// <summary>
@@ -142,7 +192,7 @@ public class Buttons : MonoBehaviour
         // play select
         AudioManager.Play(AudioName.Select);
 
-        SceneManager.LoadScene("mainMenu");
+        SceneManager.LoadScene("MainMenu");
     }
 
     #endregion

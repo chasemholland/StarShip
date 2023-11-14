@@ -17,7 +17,6 @@ TagManager:
   - Alien3Laser
   - ShipLaser1
   - PauseMenu
-  - RestartButton
   - StoreMenu
   - IncreaseLaserSpeed
   - IncreaseLaserDamage
@@ -29,6 +28,11 @@ TagManager:
   - Heart
   - Shield
   - ShieldPulse
+  - Target
+  - AlienStore
+  - Restart
+  - TargetingSystem
+  - TargetingChance
   layers:
   - Default
   - TransparentFX

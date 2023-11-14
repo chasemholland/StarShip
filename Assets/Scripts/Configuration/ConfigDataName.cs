@@ -9,6 +9,7 @@ public enum ConfigDataName
     Ship1MoveSpeed,
     Ship1LifeAmount,
     Ship1LaserDamage,
+    Ship1TargetingChance,
     Alien1LaserDamage,
     Alien1LaserCooldownMin,
     Alien1LaserCooldownMax,
@@ -35,6 +36,8 @@ public enum ConfigDataName
     LaserDamageCost,
     MoveSpeedCost,
     LifeAmountCost,
+    TargetingSystemCost,
+    TargetingChanceCost,
     UpgradeAmount,
     UpgradeCostMultiplier
 }
