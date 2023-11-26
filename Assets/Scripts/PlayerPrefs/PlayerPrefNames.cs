@@ -8,11 +8,17 @@ using UnityEngine;
 public enum PlayerPrefNames
 {
     PlayerMoney,
+    ShipShieldLevel,
     ShipMaxShield,
+    ShipLaserSpeedLevel,
     ShipLaserSpeed,
+    ShipLaserDamageLevel,
     ShipLaserDamage,
+    ShipLaserCooldownLevel,
     ShipLaserCooldown,
+    ShipMoveSpeedLevel,
     ShipMoveSpeed,
+    ShipHealthLevel,
     ShipLifeAmount,
     MothershipLifeAmount,
     HealthCost,

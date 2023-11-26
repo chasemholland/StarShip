@@ -69,7 +69,7 @@ public class Background : MonoBehaviour
 
         // set up money text
         moneyValue = PlayerPrefs.GetFloat(PlayerPrefNames.PlayerMoney.ToString(), 0);
-        moneyText.text = moneyTextPrefix + moneyValue.ToString();
+        moneyText.text = moneyTextPrefix + MoneyHandler.ConvertMoney(moneyValue);
 
         // set up round text
         roundText.text = roundTextPrefix + roundValue.ToString();
@@ -106,7 +106,7 @@ public class Background : MonoBehaviour
         moneyValue += amount;
         
         // set money text
-        moneyText.text = moneyTextPrefix + moneyValue.ToString();
+        moneyText.text = moneyTextPrefix + MoneyHandler.ConvertMoney(moneyValue);
     }
 
     /// <summary>

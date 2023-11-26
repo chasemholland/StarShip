@@ -73,6 +73,22 @@ public static class ConfigUtils
     }
 
     /// <summary>
+    /// Gets the critical hit chance
+    /// </summary>
+    public static float Ship1CritChance
+    {
+        get { return configData.Ship1CritChance; }
+    }
+
+    /// <summary>
+    /// Gets the critical hit damage multiplier
+    /// </summary>
+    public static float Ship1CritDamageMulti
+    {
+        get { return configData.Ship1CritDamageMulti; }
+    }
+
+    /// <summary>
     /// Gets alien laser damage
     /// </summary>
     public static float Alien1LaserDamage
@@ -294,6 +310,22 @@ public static class ConfigUtils
     public static float TargetingChanceCost
     {
         get { return configData.TargetingChanceCost;}
+    }
+
+    /// <summary>
+    /// Gets the critical hit chance cost
+    /// </summary>
+    public static float CritChanceCost
+    {
+        get { return configData.CritChanceCost; }
+    }
+
+    /// <summary>
+    /// Gets the critical hit damage cost
+    /// </summary>
+    public static float CritDamageCost
+    {
+        get { return configData.CritDamageCost; }
     }
 
     /// <summary>

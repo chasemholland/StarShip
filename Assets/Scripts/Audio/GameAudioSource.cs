@@ -16,7 +16,7 @@ public class GameAudioSource : MonoBehaviour
         if (!AudioManager.Initialized)
         {
             // initialize audio manager and persist throughout game
-            AudioSource audioSource = gameObject.AddComponent<AudioSource>();
+            AudioSource audioSource = gameObject.GetComponent<AudioSource>();
             AudioManager.Initialize(audioSource);
             DontDestroyOnLoad(gameObject);
         }

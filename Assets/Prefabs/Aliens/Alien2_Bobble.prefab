@@ -504,6 +504,7 @@ MonoBehaviour:
   healthBar: {fileID: 218080408734235907}
   prefabAlienExplosion: {fileID: 9087595504536371730, guid: 5a48fb5f34512ab43b4156ba69fedf59, type: 3}
   prefabShipLaserExplosion: {fileID: 4141691504688172972, guid: edb86e76373ee8d4b86c859c3149f1f2, type: 3}
+  prefabDamageText: {fileID: 4123768194582296233, guid: d03e71f74da092e41b11e80ce48de1ed, type: 3}
 --- !u!1 &8412314229489257719
 GameObject:
   m_ObjectHideFlags: 0

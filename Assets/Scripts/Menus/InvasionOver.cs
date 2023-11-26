@@ -78,7 +78,7 @@ public class InvasionOver : MonoBehaviour
         redsDefeatedValue = PlayerPrefs.GetInt(PlayerPrefNames.RedsDefeated.ToString(), 0);
         greensDefeatedValue = PlayerPrefs.GetInt(PlayerPrefNames.GreensDefeated.ToString(), 0);
         mothershipsDefeatedValue = PlayerPrefs.GetInt(PlayerPrefNames.MotherShipsDefeated.ToString(), 0);
-        bonusCoinsValue = (10 * redsDefeatedValue) + (20 * greensDefeatedValue) + (250 * mothershipsDefeatedValue);
+        bonusCoinsValue = (50 * redsDefeatedValue) + (100 * greensDefeatedValue) + (2000 * mothershipsDefeatedValue);
         spaceCoinsTotalValue = PlayerPrefs.GetFloat(PlayerPrefNames.PlayerMoney.ToString(), 0) + bonusCoinsValue;
 
         // set new player money value
@@ -93,9 +93,9 @@ public class InvasionOver : MonoBehaviour
         roundsCompletedText.text = roundsCompletedPrefix + roundsCompletedValue.ToString();
         aliensDefeatedText.text = aliensDefeatedPrefix + aliensDefeatedValue.ToString();
         mothershipsDefeatedText.text = mothershipsDefeatedPrefix + mothershipsDefeatedValue.ToString();
-        bonusCoinsText.text = bonusCoinsValue.ToString();
-        bonusCoinsCalcText.text = "Reds(" + redsDefeatedValue.ToString() + " x 10) Greens(" + greensDefeatedValue.ToString() + " x 20) Blues(" + mothershipsDefeatedValue.ToString() + " x 250)";
-        spaceCoinsTotalText.text = spaceCoinsTotalPrefix + spaceCoinsTotalValue.ToString();
+        bonusCoinsText.text = MoneyHandler.ConvertMoney(bonusCoinsValue);
+        bonusCoinsCalcText.text = "Reds(" + redsDefeatedValue.ToString() + " x 50) Greens(" + greensDefeatedValue.ToString() + " x 100) Blues(" + mothershipsDefeatedValue.ToString() + " x 2000)";
+        spaceCoinsTotalText.text = spaceCoinsTotalPrefix + MoneyHandler.ConvertMoney(spaceCoinsTotalValue);
     }
 
     /// <summary>

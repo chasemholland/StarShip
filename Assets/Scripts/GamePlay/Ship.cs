@@ -57,8 +57,8 @@ public class Ship : FloatEventInvoker
     float shipHeight;
 
     // money values
-    int coinValue = 10;
-    int coinBagValue = 50;
+    int coinValue = 50;
+    int coinBagValue = 150;
 
 
     #endregion
@@ -259,10 +259,10 @@ public class Ship : FloatEventInvoker
             AudioManager.Play(AudioName.Pickup);
 
             // check if health amount can be added
-            if (healthLeft + 1 <= maxHealth)
+            if (healthLeft + 100 <= maxHealth)
             {
-                healthLeft += 1;
-                unityEvents[EventName.IncreaseHealthEvent].Invoke(1);
+                healthLeft += 100;
+                unityEvents[EventName.IncreaseHealthEvent].Invoke(100);
             }
             else
             {
@@ -281,10 +281,10 @@ public class Ship : FloatEventInvoker
             AudioManager.Play(AudioName.Pickup);
 
             // check if shield amount can be added
-            if (shieldLeft + 1 <= maxShield)
+            if (shieldLeft + maxShield / 2 <= maxShield)
             {
-                shieldLeft += 1;
-                unityEvents[EventName.IncreaseShieldEvent].Invoke(1);
+                shieldLeft += maxShield / 2;
+                unityEvents[EventName.IncreaseShieldEvent].Invoke(maxShield / 2);
             }
             else
             {

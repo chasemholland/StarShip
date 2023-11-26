@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -56,7 +57,10 @@ public class Buttons : MonoBehaviour
     /// </summary>
     public void HandlePlayButtonOnClickEvent()
     {
-        PlayerPrefs.SetFloat(PlayerPrefNames.PlayerMoney.ToString(), 100000);
+        // Debugging ---- REMOVE
+        //PlayerPrefs.SetFloat(PlayerPrefNames.PlayerMoney.ToString(), PlayerPrefs.GetFloat(PlayerPrefNames.PlayerMoney.ToString()) + 100000000000);
+
+
         // play select
         AudioManager.Play(AudioName.Select);
 
@@ -73,7 +77,10 @@ public class Buttons : MonoBehaviour
         PlayerPrefs.SetInt(PlayerPrefNames.GreensDefeated.ToString(), 0);
         PlayerPrefs.SetInt(PlayerPrefNames.MotherShipsDefeated.ToString(), 0);
 
+        // set time scale
         Time.timeScale = 1.0f;
+
+        // load game play
         SceneManager.LoadScene("GamePlay");
     }
 
@@ -130,7 +137,18 @@ public class Buttons : MonoBehaviour
         // play select
         AudioManager.Play(AudioName.Select);
 
+        // set pause button
+        Button buttonA = GameObject.FindGameObjectWithTag("Pause").GetComponent<Button>();
+        buttonA.enabled = false;
+        buttonA.interactable = false;
+
+        // deselct the button
+        EventSystem.current.SetSelectedGameObject(null);
+
+        // set time scale
         Time.timeScale = 0;
+
+        // display pause menu
         Instantiate(prefabPauseMenu);
     }
 
@@ -145,6 +163,10 @@ public class Buttons : MonoBehaviour
         // play ambient music
         LoopingAudioManager.Switch(AudioName.Ambient);
 
+        // set time scale
+        Time.timeScale = 1.0f;
+
+        // load main menu
         SceneManager.LoadScene("MainMenu");
     }
 
@@ -156,7 +178,15 @@ public class Buttons : MonoBehaviour
         // play select
         AudioManager.Play(AudioName.Select);
 
+        // set pause button
+        Button buttonA = GameObject.FindGameObjectWithTag("Pause").GetComponent<Button>();
+        buttonA.enabled = true;
+        buttonA.interactable = true;
+
+        // set time scale
         Time.timeScale = 1.0f;
+
+        // destroy pause menu
         Destroy(GameObject.FindGameObjectWithTag("PauseMenu"));
     }
 

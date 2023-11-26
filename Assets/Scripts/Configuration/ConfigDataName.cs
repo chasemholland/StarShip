@@ -10,6 +10,8 @@ public enum ConfigDataName
     Ship1LifeAmount,
     Ship1LaserDamage,
     Ship1TargetingChance,
+    Ship1CritChance,
+    Ship1CritDamageMulti,
     Alien1LaserDamage,
     Alien1LaserCooldownMin,
     Alien1LaserCooldownMax,
@@ -38,6 +40,8 @@ public enum ConfigDataName
     LifeAmountCost,
     TargetingSystemCost,
     TargetingChanceCost,
+    CritChanceCost,
+    CritDamageCost,
     UpgradeAmount,
     UpgradeCostMultiplier
 }

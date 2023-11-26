@@ -10,6 +10,9 @@ public class AlienLaser : FloatEventInvoker
 {
     #region Fields
 
+    [SerializeField]
+    GameObject prefabShipLaserExplosion;
+
     // despawn timer
     Timer despawnTimer;
 
@@ -74,14 +77,40 @@ public class AlienLaser : FloatEventInvoker
 
     }
 
-    #endregion
-
-    #region Private Methods
-
     /// <summary>
-    /// Destroys the game object on timer finish
+    /// Collision triggered event
     /// </summary>
-    private void HandleLaserDespawn()
+    /// <param name="other"></param>
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("ShipLaser1"))
+        {
+            // play laser hit
+            AudioManager.Play(AudioName.ShipLaserHit);
+
+            // get laser height
+            float otherHalfheight = other.GetComponent<BoxCollider2D>().size.y / 2;
+
+            // spawn explosion
+            Instantiate(prefabShipLaserExplosion, new Vector3(other.transform.position.x, other.transform.position.y - otherHalfheight, 0f), Quaternion.identity);
+
+            // destroy alien laser
+            Destroy(other.gameObject);
+
+            // destroy alien laser
+            Destroy(gameObject);
+        }
+
+    }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Destroys the game object on timer finish
+        /// </summary>
+        private void HandleLaserDespawn()
     {
         Destroy(gameObject);
     }

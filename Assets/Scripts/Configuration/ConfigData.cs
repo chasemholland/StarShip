@@ -78,6 +78,22 @@ public class ConfigData
     }
 
     /// <summary>
+    /// Gets the critical hit chance
+    /// </summary>
+    public float Ship1CritChance
+    {
+        get { return values[ConfigDataName.Ship1CritChance]; }
+    }
+
+    /// <summary>
+    /// Gets the critical hit multiplier
+    /// </summary>
+    public float Ship1CritDamageMulti
+    {
+        get { return values[ConfigDataName.Ship1CritDamageMulti]; }
+    }
+
+    /// <summary>
     /// Gets the alien laser damage
     /// </summary>
     public float Alien1LaserDamage
@@ -302,6 +318,22 @@ public class ConfigData
     }
 
     /// <summary>
+    /// Gets the critical hit chance cost
+    /// </summary>
+    public float CritChanceCost
+    {
+        get { return values[ConfigDataName.CritChanceCost]; }
+    }
+
+    /// <summary>
+    /// Gets the critical hit damage cost
+    /// </summary>
+    public float CritDamageCost
+    {
+        get { return values[ConfigDataName.CritDamageCost]; }
+    }
+
+    /// <summary>
     /// Gets the updgrade amount
     /// </summary>
     public float UpgradeAmount
@@ -388,6 +420,8 @@ public class ConfigData
         values.Add(ConfigDataName.Ship1LifeAmount, 6);
         values.Add(ConfigDataName.Ship1LaserDamage, 1);
         values.Add(ConfigDataName.Ship1TargetingChance, 5);
+        values.Add(ConfigDataName.Ship1CritChance, 0.1f);
+        values.Add(ConfigDataName.Ship1CritDamageMulti, 2);
         values.Add(ConfigDataName.Alien1LaserDamage, 0.5f);
         values.Add(ConfigDataName.Alien1LaserCooldownMin, 3);
         values.Add(ConfigDataName.Alien1LaserCooldownMax, 6);
@@ -415,7 +449,9 @@ public class ConfigData
         values.Add(ConfigDataName.MoveSpeedCost, 10);
         values.Add(ConfigDataName.LifeAmountCost, 10);
         values.Add(ConfigDataName.TargetingSystemCost, 2000);
-        values.Add(ConfigDataName.TargetingChanceCost, 10);
+        values.Add(ConfigDataName.TargetingChanceCost, 100);
+        values.Add(ConfigDataName.CritChanceCost, 100);
+        values.Add(ConfigDataName.CritDamageCost, 100);
         values.Add(ConfigDataName.UpgradeAmount, 0.25f);
         values.Add(ConfigDataName.UpgradeCostMultiplier, 1.75f);
     }

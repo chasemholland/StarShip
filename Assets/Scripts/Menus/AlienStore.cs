@@ -91,7 +91,7 @@ public class AlienStore : MonoBehaviour
             PlayerPrefs.SetFloat(PlayerPrefNames.PlayerMoney.ToString(), moneyValue);
 
             // set money text
-            moneyValueText.text = moneyValuePrefix + moneyValue.ToString();
+            moneyValueText.text = moneyValuePrefix + MoneyHandler.ConvertMoney(moneyValue);
 
             // set the buttons
             SetStoreButtons();
@@ -109,7 +109,7 @@ public class AlienStore : MonoBehaviour
     private void SetText()
     {
         // set money value text
-        moneyValueText.text = moneyValuePrefix + moneyValue.ToString();
+        moneyValueText.text = moneyValuePrefix + MoneyHandler.ConvertMoney(moneyValue);
 
         if (PlayerPrefs.GetInt(PlayerPrefNames.HasTargetingSystem.ToString(), 0) == 1)
         {

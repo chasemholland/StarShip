@@ -33,6 +33,7 @@ TagManager:
   - Restart
   - TargetingSystem
   - TargetingChance
+  - Pause
   layers:
   - Default
   - TransparentFX

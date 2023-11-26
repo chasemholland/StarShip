@@ -36,7 +36,7 @@ public class ShipLaser : FloatEventInvoker
             GetAliens();
 
             // target chance
-            float lockedOn = Random.Range(1, 11);
+            float lockedOn = Random.Range(0.1f, 1.1f);
             float targetingChance = ConfigUtils.Ship1TargetingChance * (1 + PlayerPrefs.GetFloat(PlayerPrefNames.TargetingChanceAmount.ToString(), 0));
             if (lockedOn <= targetingChance)
             {

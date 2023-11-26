@@ -30,7 +30,7 @@ public class MainMenuBackground : MonoBehaviour
 
         // set up money text
         moneyValue = PlayerPrefs.GetFloat(PlayerPrefNames.PlayerMoney.ToString());
-        moneyText.text = moneyTextPrefix + moneyValue.ToString();
+        moneyText.text = moneyTextPrefix + MoneyHandler.ConvertMoney(moneyValue);
 
     }
 
@@ -43,7 +43,7 @@ public class MainMenuBackground : MonoBehaviour
             moneyValue = PlayerPrefs.GetFloat(PlayerPrefNames.PlayerMoney.ToString());
 
             // set money text
-            moneyText.text = moneyTextPrefix + moneyValue.ToString();
+            moneyText.text = moneyTextPrefix + MoneyHandler.ConvertMoney(moneyValue);
         }
     }
 
@@ -61,7 +61,7 @@ public class MainMenuBackground : MonoBehaviour
         moneyValue += amount;
 
         // set money text
-        moneyText.text = moneyTextPrefix + moneyValue.ToString();
+        moneyText.text = moneyTextPrefix + MoneyHandler.ConvertMoney(moneyValue);
     }
 
     #endregion

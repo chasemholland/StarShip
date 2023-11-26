@@ -1,10 +1,12 @@
+using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 /// <summary>
 /// Alien behaviour
 /// </summary>
-public class Alien : MonoBehaviour
+public class Alien : FloatEventInvoker
 {
     #region Fields
 
@@ -37,6 +39,9 @@ public class Alien : MonoBehaviour
     [SerializeField]
     GameObject prefabShipLaserExplosion;
 
+    [SerializeField]
+    GameObject prefabDamageText;
+
     // chance of what holding
     bool hasCoin = false;
     bool hasCoinBag = false;
@@ -63,6 +68,9 @@ public class Alien : MonoBehaviour
 
     // damage amount
     float playerDamage;
+    float playerCritChance;
+    float playerCritMultiplier;
+    float damage;
 
     #endregion
 
@@ -75,7 +83,11 @@ public class Alien : MonoBehaviour
     {
         // get player damage
         playerDamage = ConfigUtils.Ship1LaserDamage * (1f + PlayerPrefs.GetFloat(PlayerPrefNames.ShipLaserDamage.ToString(), 0));
-        
+
+        // get player crit
+        playerCritChance = ConfigUtils.Ship1CritChance;
+        playerCritMultiplier = ConfigUtils.Ship1CritDamageMulti;
+
         // get reference to alien
         alienBody = GetComponent<Rigidbody2D>();
 
@@ -92,6 +104,7 @@ public class Alien : MonoBehaviour
 
         // set shoot and move timers
         SetTimers();
+
     }
 
     /// <summary>
@@ -116,8 +129,8 @@ public class Alien : MonoBehaviour
         // check if collider is player laser
         if (other.CompareTag("ShipLaser1"))
         {
-            // play laser hit
-            AudioManager.Play(AudioName.ShipLaserHit);
+            // handle alien damaged
+            HandleDamage();
 
             // get height of laser
             float otherHalfHeight = other.GetComponent<BoxCollider2D>().size.y / 2;
@@ -127,12 +140,6 @@ public class Alien : MonoBehaviour
 
             // destroy laser
             Destroy(other.gameObject);
-
-            // damage alien
-            healthRemaining -= playerDamage;
-
-            // adjust healthbar
-            healthBar.value = healthRemaining / maxHealth;
 
             // store mothership health for next waves
             if (gameObject.CompareTag("Alien3"))
@@ -151,6 +158,44 @@ public class Alien : MonoBehaviour
     #endregion
 
     #region Private Methods
+
+    /// <summary>
+    /// Handles alien damaged
+    /// </summary>
+    private void HandleDamage()
+    {
+        // spawn damage text
+        GameObject damageText = Instantiate(prefabDamageText, transform.position, Quaternion.identity);
+
+        if (Random.Range(0.0f, 1.1f) < playerCritChance)
+        {
+            // play laser hit ------ TO BE CHANGED TO SEPERATE NOISE ------------------------------
+            AudioManager.Play(AudioName.ShipLaserHit);
+
+            // set damage
+            damage = playerDamage * playerCritMultiplier;
+
+        }
+        else
+        {
+            // play laser hit
+            AudioManager.Play(AudioName.ShipLaserHit);
+
+            // set damage
+            damage = playerDamage;
+
+        }
+
+        // set damage text
+        damageText.GetComponent<TextMeshPro>().SetText(damage.ToString());
+
+        // adjust health
+        healthRemaining -= damage;
+
+        // adjust healthbar
+        healthBar.value = healthRemaining / maxHealth;
+
+    }
 
     /// <summary>
     /// Handles alien death
