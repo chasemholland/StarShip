@@ -38,6 +38,30 @@ public static class MoneyHandler
         {
             moneyString = MathF.Round((money / 1000000000000), 2).ToString() + AbreviationName.T.ToString();
         }
+        else if (money >= 1000000000000000 && money < 1000000000000000000)
+        {
+            moneyString = MathF.Round((money / 1000000000000000), 2).ToString() + AbreviationName.QD.ToString();
+        }
+        else if (money >= 1000000000000000 && money < 1000000000000000000000f)
+        {
+            moneyString = MathF.Round((money / 1000000000000000000), 2).ToString() + AbreviationName.QT.ToString();
+        }
+        else if (money >= 1000000000000000000 && money < 1000000000000000000000000f)
+        {
+            moneyString = MathF.Round((money / 1000000000000000000000f), 2).ToString() + AbreviationName.ST.ToString();
+        }
+        else if (money >= 1000000000000000000000f && money < 1000000000000000000000000000f)
+        {
+            moneyString = MathF.Round((money / 1000000000000000000000000f), 2).ToString() + AbreviationName.SP.ToString();
+        }
+        else if (money >= 1000000000000000000000000f && money < 1000000000000000000000000000000f)
+        {
+            moneyString = MathF.Round((money / 1000000000000000000000000000f), 2).ToString() + AbreviationName.OT.ToString();
+        }
+        else
+        {
+            moneyString = "NULL";
+        }
 
         return moneyString;
     }

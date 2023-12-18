@@ -47,7 +47,7 @@ public class LoopingAudioManager : MonoBehaviour
     {
         initialized = true;
         audioSource = source;
-        audioSource.volume = 0.6f;
+        audioSource.volume = 0.5f;
         audioClips.Add(AudioName.GamePlayAmbient, Resources.Load<AudioClip>("Background"));
         audioClips.Add(AudioName.Ambient, Resources.Load<AudioClip>("InvasionOver"));
     }

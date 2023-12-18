@@ -14,5 +14,15 @@ public enum AbreviationName
     // billion
     B,
     // trillion
-    T
+    T,
+    // quadrillion
+    QD,
+    // quintillion
+    QT,
+    // sextillion
+    ST,
+    // septillion
+    SP,
+    // octillion
+    OT
 }

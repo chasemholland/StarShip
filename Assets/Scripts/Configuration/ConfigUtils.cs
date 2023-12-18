@@ -89,6 +89,22 @@ public static class ConfigUtils
     }
 
     /// <summary>
+    /// Gets the money multiplier
+    /// </summary>
+    public static float Ship1MoneyMultiplier
+    {
+        get { return configData.Ship1MoneyMultiplier; }
+    }
+
+    /// <summary>
+    /// Gets the magnet range
+    /// </summary>
+    public static float Ship1MagnetRange
+    {
+        get { return configData.Ship1MagnetRange; }
+    }
+
+    /// <summary>
     /// Gets alien laser damage
     /// </summary>
     public static float Alien1LaserDamage
@@ -121,19 +137,35 @@ public static class ConfigUtils
     }
 
     /// <summary>
-    /// Gets the alien movement speed
+    /// Gets the alien x movement speed
     /// </summary>
-    public static float Alien1MoveSpeed
+    public static float Alien1MoveSpeedX
     {
-        get { return configData.Alien1MoveSpeed; }
+        get { return configData.Alien1MoveSpeedX; }
     }
 
     /// <summary>
-    /// Gets the alien movement delay
+    /// Gets the alien y movement speed
     /// </summary>
-    public static float Alien1MoveDelay
+    public static float Alien1MoveSpeedY
     {
-        get { return configData.Alien1MoveDelay; }
+        get { return configData.Alien1MoveSpeedY; }
+    }
+
+    /// <summary>
+    /// Gets the minimum alien movement delay
+    /// </summary>
+    public static float Alien1MoveDelayMin
+    {
+        get { return configData.Alien1MoveDelayMin; }
+    }
+
+    /// <summary>
+    /// Gets the max alien movement delay
+    /// </summary>
+    public static float Alien1MoveDelayMax
+    {
+        get { return configData.Alien1MoveDelayMax; }
     }
 
     /// <summary>
@@ -177,19 +209,35 @@ public static class ConfigUtils
     }
 
     /// <summary>
-    /// Gets the alien movement speed
+    /// Gets the alien x movement speed
     /// </summary>
-    public static float Alien2MoveSpeed
+    public static float Alien2MoveSpeedX
     {
-        get { return configData.Alien2MoveSpeed; }
+        get { return configData.Alien2MoveSpeedX; }
     }
 
     /// <summary>
-    /// Gets the alien movement delay
+    /// Gets the alien y movement speed
     /// </summary>
-    public static float Alien2MoveDelay
+    public static float Alien2MoveSpeedY
     {
-        get { return configData.Alien2MoveDelay; }
+        get { return configData.Alien2MoveSpeedY; }
+    }
+
+    /// <summary>
+    /// Gets the minimum alien movement delay
+    /// </summary>
+    public static float Alien2MoveDelayMin
+    {
+        get { return configData.Alien2MoveDelayMin; }
+    }
+
+    /// <summary>
+    /// Gets max the alien movement delay
+    /// </summary>
+    public static float Alien2MoveDelayMax
+    {
+        get { return configData.Alien2MoveDelayMax; }
     }
 
     /// <summary>
@@ -233,19 +281,35 @@ public static class ConfigUtils
     }
 
     /// <summary>
-    /// Gets the alien movement speed
+    /// Gets the alien x movement speed
     /// </summary>
-    public static float Alien3MoveSpeed
+    public static float Alien3MoveSpeedX
     {
-        get { return configData.Alien3MoveSpeed; }
+        get { return configData.Alien3MoveSpeedX; }
     }
 
     /// <summary>
-    /// Gets the alien movement delay
+    /// Gets the alien y movement speed
     /// </summary>
-    public static float Alien3MoveDelay
+    public static float Alien3MoveSpeedY
     {
-        get { return configData.Alien3MoveDelay; }
+        get { return configData.Alien3MoveSpeedY; }
+    }
+
+    /// <summary>
+    /// Gets the minimum alien movement delay
+    /// </summary>
+    public static float Alien3MoveDelayMin
+    {
+        get { return configData.Alien3MoveDelayMin; }
+    }
+
+    /// <summary>
+    /// Gets the max alien movement delay
+    /// </summary>
+    public static float Alien3MoveDelayMax
+    {
+        get { return configData.Alien3MoveDelayMax; }
     }
 
     /// <summary>
@@ -329,6 +393,22 @@ public static class ConfigUtils
     }
 
     /// <summary>
+    /// Gets the money multiplier cost
+    /// </summary>
+    public static float MoneyMultiplierCost
+    {
+        get { return configData.MoneyMultiplierCost; }
+    }
+
+    /// <summary>
+    /// Gets the manget range cost
+    /// </summary>
+    public static float MagnetRangeCost
+    {
+        get { return configData.MagnetRangeCost; }
+    }
+
+    /// <summary>
     /// Gets the updgrade amount
     /// </summary>
     public static float UpgradeAmount
@@ -342,6 +422,14 @@ public static class ConfigUtils
     public static float UpgradeCostMultiplier
     {
         get { return configData.UpgradeCostMultiplier; }
+    }
+
+    /// <summary>
+    /// Gets the max main store max multiplier
+    /// </summary>
+    public static float StoreMaxMultiplier
+    {
+        get { return configData.StoreMaxMultiplier; }
     }
 
     #endregion

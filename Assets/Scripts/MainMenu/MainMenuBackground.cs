@@ -25,11 +25,8 @@ public class MainMenuBackground : MonoBehaviour
     /// </summary>
     void Start()
     {
-        // add as listener for add money event
-        EventManager.AddListener(EventName.AddMoneyEvent, HandleAddMoneyEvent);
-
         // set up money text
-        moneyValue = PlayerPrefs.GetFloat(PlayerPrefNames.PlayerMoney.ToString());
+        moneyValue = PlayerPrefs.GetFloat(PlayerPrefNames.PlayerMoney.ToString(), 0);
         moneyText.text = moneyTextPrefix + MoneyHandler.ConvertMoney(moneyValue);
 
     }
@@ -45,23 +42,6 @@ public class MainMenuBackground : MonoBehaviour
             // set money text
             moneyText.text = moneyTextPrefix + MoneyHandler.ConvertMoney(moneyValue);
         }
-    }
-
-    #endregion
-
-    #region Private Methods
-
-    /// <summary>
-    /// Handles adding money event
-    /// </summary>
-    /// <param name="amount"></param>
-    private void HandleAddMoneyEvent(float amount)
-    {
-        // increment money
-        moneyValue += amount;
-
-        // set money text
-        moneyText.text = moneyTextPrefix + MoneyHandler.ConvertMoney(moneyValue);
     }
 
     #endregion

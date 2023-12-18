@@ -97,6 +97,10 @@ public class Store : FloatEventInvoker
     float laserSpeedMultiplierValue;
     string laserSpeedMultiplierPrefix = "x ";
 
+    // default cost max text
+    float maxMultiplier;
+    string max = "MAX";
+
     #endregion
 
     #region Unity Methods
@@ -106,41 +110,20 @@ public class Store : FloatEventInvoker
     /// </summary>
     void Start()
     {
-        // set levels
-        SetLevels();
+        // set money value
+        moneyValue = PlayerPrefs.GetFloat(PlayerPrefNames.PlayerMoney.ToString(), 0);
 
-        // set values
-        SetValues();
+        // set money value text
+        moneyValueText.text = moneyValuePrefix + MoneyHandler.ConvertMoney(moneyValue);
 
-        // set texts
-        SetText();
+        // get max multiplier
+        maxMultiplier = ConfigUtils.StoreMaxMultiplier;
+
+        // set values and text
+        SetValuesAndText();
 
         // set store buttons
         SetStoreButtons();
-
-    }
-
-    /// <summary>
-    /// Update is called once per frame
-    /// </summary>
-    void Update()
-    {
-        /*
-        if (moneyValue != PlayerPrefs.GetFloat(PlayerPrefNames.PlayerMoney.ToString()))
-        {
-            // update values
-            UpdateValues();
-
-            // set money in player prefs
-            PlayerPrefs.SetFloat(PlayerPrefNames.PlayerMoney.ToString(), moneyValue);
-
-            // set money text
-            moneyValueText.text = moneyValuePrefix + MoneyHandler.ConvertMoney(moneyValue);
-
-            // set the buttons
-            SetStoreButtons();
-        }
-        */
 
     }
 
@@ -154,7 +137,7 @@ public class Store : FloatEventInvoker
     private void HandlePurchase()
     {
         // update values
-        UpdateValues();
+        SetValuesAndText();
 
         // set money in player prefs
         PlayerPrefs.SetFloat(PlayerPrefNames.PlayerMoney.ToString(), moneyValue);
@@ -167,172 +150,140 @@ public class Store : FloatEventInvoker
     }
 
     /// <summary>
-    /// Sets the texts
+    /// Sets initial values and text
     /// </summary>
-    private void SetText()
+    private void SetValuesAndText()
     {
-        // set money value text
-        moneyValueText.text = moneyValuePrefix + MoneyHandler.ConvertMoney(moneyValue);
-
-        // set player stats text
-        healthStat.text = healthStatPrefix + MathF.Round(healthStatValue, 2).ToString();
-        moveStat.text = moveStatPrefix + MathF.Round(moveStatValue, 2).ToString();
-        laserDamageStat.text = laserDamageStatPrefix + MathF.Round(laserDamageStatValue, 2).ToString();
-        laserCooldownStat.text = laserCooldownStatPrefix + MathF.Round(laserCooldownStatValue, 2).ToString();
-        laserSpeedStat.text = laserSpeedStatPrefix + MathF.Round(laserSpeedStatValue, 2).ToString();
-
-        // set cost text
-        healthCost.text = healthCostPrefix + MoneyHandler.ConvertMoney(healthCostValue);
-        moveCost.text = moveCostPrefix + MoneyHandler.ConvertMoney(moveCostValue);
-        laserDamageCost.text = laserDamageCostPrefix + MoneyHandler.ConvertMoney(laserDamageCostValue);
-        laserCooldownCost.text = laserCooldownCostPrefix + MoneyHandler.ConvertMoney(laserCooldownCostValue);
-        laserSpeedCost.text = laserSpeedCostPrefix + MoneyHandler.ConvertMoney(laserSpeedCostValue);
-
-        // set multiplier text
-        healthMultiplier.text = healthMultiplierPrefix + healthMultiplierValue.ToString();
-        moveMultiplier.text = moveMultiplierPrefix + moveMultiplierValue.ToString();
-        laserDamageMultiplier.text = laserDamageMultiplierPrefix + laserDamageMultiplierValue.ToString();
-        laserCooldownMultiplier.text = laserCooldownMultiplierPrefix + laserCooldownMultiplierValue.ToString();
-        laserSpeedMultiplier.text = laserSpeedMultiplierPrefix + laserSpeedMultiplierValue.ToString();
-    }
-
-    /// <summary>
-    /// Sets initial values
-    /// </summary>
-    private void SetValues()
-    {
-        // set money value
-        moneyValue = PlayerPrefs.GetFloat(PlayerPrefNames.PlayerMoney.ToString(), 0);
-
+        //
         // set player stats values
+        //
+
+        // set health value
         healthStatValue = ConfigUtils.Ship1LifeAmount * (1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipLifeAmount.ToString(), 0));
+        // set move speed value
         moveStatValue = ConfigUtils.Ship1MoveSpeed * (1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipMoveSpeed.ToString(), 0));
+        // set laser damage value
         laserDamageStatValue = ConfigUtils.Ship1LaserDamage * (1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipLaserDamage.ToString(), 0));
+        // set laser cooldown value
         laserCooldownStatValue = ConfigUtils.Ship1LaserCooldown / (1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipLaserCooldown.ToString(), 0));
+        // set laser speed value
         laserSpeedStatValue = ConfigUtils.Ship1LaserSpeed * (1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipLaserSpeed.ToString(), 0));
 
-        // set cost values
-        healthCostValue = PlayerPrefs.GetFloat(PlayerPrefNames.HealthCost.ToString(), ConfigUtils.LifeAmountCost);
-        moveCostValue = PlayerPrefs.GetFloat(PlayerPrefNames.MoveCost.ToString(), ConfigUtils.MoveSpeedCost);
-        laserDamageCostValue = PlayerPrefs.GetFloat(PlayerPrefNames.LaserDamageCost.ToString(), ConfigUtils.LaserDamageCost);
-        laserCooldownCostValue = PlayerPrefs.GetFloat(PlayerPrefNames.LaserCooldownCost.ToString(), ConfigUtils.LaserCooldownCost);
-        laserSpeedCostValue = PlayerPrefs.GetFloat(PlayerPrefNames.LaserSpeedCost.ToString(), ConfigUtils.LaserSpeedCost);
+        //
+        // set player stats text
+        //
 
+        // set health text
+        healthStat.text = healthStatPrefix + MathF.Round(healthStatValue, 2).ToString();
+        // set move speed text
+        moveStat.text = moveStatPrefix + MathF.Round(moveStatValue, 2).ToString();
+        // set laser damage text
+        laserDamageStat.text = laserDamageStatPrefix + MathF.Round(laserDamageStatValue, 2).ToString();
+        // set laser cooldown text
+        laserCooldownStat.text = laserCooldownStatPrefix + MathF.Round(laserCooldownStatValue, 2).ToString();
+        // set laser speed text
+        laserSpeedStat.text = laserSpeedStatPrefix + MathF.Round(laserSpeedStatValue, 2).ToString();
+
+        //
         // set multiplier values
+        //
+
+        // set health multiplier
         healthMultiplierValue = 1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipLifeAmount.ToString(), 0);
+        // set move speed multiplier
         moveMultiplierValue = 1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipMoveSpeed.ToString(), 0);
+        // set laser damage multiplier
         laserDamageMultiplierValue = 1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipLaserDamage.ToString(), 0);
+        // set laser coolodwn multiplier
         laserCooldownMultiplierValue = 1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipLaserCooldown.ToString(), 0);
+        // set laser speed multiplier
         laserSpeedMultiplierValue = 1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipLaserSpeed.ToString(), 0);
-    }
 
-    /// <summary>
-    /// Sets or retrieves stat levels
-    /// </summary>
-    private void SetLevels()
-    {
-        // base level 1 if no value stored in player prefs
-        healthLevel = PlayerPrefs.GetInt(PlayerPrefNames.ShipHealthLevel.ToString(), 1);
-        moveLevel = PlayerPrefs.GetInt(PlayerPrefNames.ShipMoveSpeedLevel.ToString(), 1);
-        laserDamageLevel = PlayerPrefs.GetInt(PlayerPrefNames.ShipLaserDamageLevel.ToString(), 1);
-        laserCooldownLevel = PlayerPrefs.GetInt(PlayerPrefNames.ShipLaserCooldownLevel.ToString(), 1);
-        laserSpeedLevel = PlayerPrefs.GetInt(PlayerPrefNames.ShipLaserSpeedLevel.ToString(), 1);
-    }
+        //
+        // set multiplier text
+        //
 
-    /// <summary>
-    /// Updates values
-    /// </summary>
-    private void UpdateValues()
-    {
-        // update stats
-        if (healthStatValue != ConfigUtils.Ship1LifeAmount * (1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipLifeAmount.ToString(), 0)))
+        // set health multiplier text
+        healthMultiplier.text = healthMultiplierPrefix + healthMultiplierValue.ToString();
+        // set move speed multiplier text
+        moveMultiplier.text = moveMultiplierPrefix + moveMultiplierValue.ToString();
+        // set laser damage multiplier text
+        laserDamageMultiplier.text = laserDamageMultiplierPrefix + laserDamageMultiplierValue.ToString();
+        // set laser coolodwn multiplier text
+        laserCooldownMultiplier.text = laserCooldownMultiplierPrefix + laserCooldownMultiplierValue.ToString();
+        // set laser speed multiplier text
+        laserSpeedMultiplier.text = laserSpeedMultiplierPrefix + laserSpeedMultiplierValue.ToString();
+
+        //
+        // set cost values
+        //
+
+        // set health cost and text
+        healthCostValue = PlayerPrefs.GetFloat(PlayerPrefNames.HealthCost.ToString(), ConfigUtils.LifeAmountCost);
+        if (healthMultiplierValue >= maxMultiplier)
         {
-            healthStatValue = ConfigUtils.Ship1LifeAmount * (1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipLifeAmount.ToString(), 0));
-            healthStat.text = healthStatPrefix + MathF.Round(healthStatValue, 2).ToString();
+            healthCost.text = max;
         }
-        if (moveStatValue != ConfigUtils.Ship1MoveSpeed * (1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipMoveSpeed.ToString(), 0)))
+        else
         {
-            moveStatValue = ConfigUtils.Ship1MoveSpeed * (1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipMoveSpeed.ToString(), 0));
-            moveStat.text = moveStatPrefix + MathF.Round(moveStatValue, 2).ToString();
-        }
-        if (laserDamageStatValue != ConfigUtils.Ship1LaserDamage * (1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipLaserDamage.ToString(), 0)))
-        {
-            laserDamageStatValue = ConfigUtils.Ship1LaserDamage * (1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipLaserDamage.ToString(), 0));
-            laserDamageStat.text = laserDamageStatPrefix + MathF.Round(laserDamageStatValue).ToString();
-        }
-        if (laserCooldownStatValue != ConfigUtils.Ship1LaserCooldown / (1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipLaserCooldown.ToString(), 0)))
-        {
-            laserCooldownStatValue = ConfigUtils.Ship1LaserCooldown / (1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipLaserCooldown.ToString(), 0));
-            laserCooldownStat.text = laserCooldownStatPrefix + MathF.Round(laserCooldownStatValue, 2).ToString();
-        }
-        if (laserSpeedStatValue != ConfigUtils.Ship1LaserSpeed * (1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipLaserSpeed.ToString(), 0)))
-        {
-            laserSpeedStatValue = ConfigUtils.Ship1LaserSpeed * (1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipLaserSpeed.ToString(), 0));
-            laserSpeedStat.text = laserSpeedStatPrefix + MathF.Round(laserSpeedStatValue, 2).ToString();
+            healthCost.text = healthCost.text = healthCostPrefix + MoneyHandler.ConvertMoney(healthCostValue);
         }
 
-        // update cost
-        if (healthCostValue != PlayerPrefs.GetFloat(PlayerPrefNames.HealthCost.ToString(), ConfigUtils.LifeAmountCost))
+        // set move speed cost and text
+        moveCostValue = PlayerPrefs.GetFloat(PlayerPrefNames.MoveCost.ToString(), ConfigUtils.MoveSpeedCost);
+        if (moveMultiplierValue >= maxMultiplier)
         {
-            healthCostValue = PlayerPrefs.GetFloat(PlayerPrefNames.HealthCost.ToString());
-            healthCost.text = healthCostPrefix + MoneyHandler.ConvertMoney(healthCostValue);
+            moveCost.text = max;
         }
-        if (moveCostValue != PlayerPrefs.GetFloat(PlayerPrefNames.MoveCost.ToString(), ConfigUtils.MoveSpeedCost))
+        else
         {
-            moveCostValue = PlayerPrefs.GetFloat(PlayerPrefNames.MoveCost.ToString());
             moveCost.text = moveCostPrefix + MoneyHandler.ConvertMoney(moveCostValue);
         }
-        if (laserDamageCostValue != PlayerPrefs.GetFloat(PlayerPrefNames.LaserDamageCost.ToString(), ConfigUtils.LaserDamageCost))
+
+        // set laser damage cost and text
+        laserDamageCostValue = PlayerPrefs.GetFloat(PlayerPrefNames.LaserDamageCost.ToString(), ConfigUtils.LaserDamageCost);
+        if (laserDamageMultiplierValue >= maxMultiplier)
         {
-            laserDamageCostValue = PlayerPrefs.GetFloat(PlayerPrefNames.LaserDamageCost.ToString());
+            laserDamageCost.text = max;
+        }
+        else
+        {
             laserDamageCost.text = laserDamageCostPrefix + MoneyHandler.ConvertMoney(laserDamageCostValue);
         }
-        if (laserCooldownCostValue != PlayerPrefs.GetFloat(PlayerPrefNames.LaserCooldownCost.ToString(), ConfigUtils.LaserCooldownCost))
+
+        // set laser cooldown cost and text
+        laserCooldownCostValue = PlayerPrefs.GetFloat(PlayerPrefNames.LaserCooldownCost.ToString(), ConfigUtils.LaserCooldownCost);
+        if (laserCooldownMultiplierValue >= maxMultiplier)
         {
-            laserCooldownCostValue = PlayerPrefs.GetFloat(PlayerPrefNames.LaserCooldownCost.ToString());
+            laserCooldownCost.text = max;
+        }
+        else
+        {
             laserCooldownCost.text = laserCooldownCostPrefix + MoneyHandler.ConvertMoney(laserCooldownCostValue);
         }
-        if (laserSpeedCostValue != PlayerPrefs.GetFloat(PlayerPrefNames.LaserSpeedCost.ToString(), ConfigUtils.LaserSpeedCost))
-        {
-            laserSpeedCostValue = PlayerPrefs.GetFloat(PlayerPrefNames.LaserSpeedCost.ToString());
-            laserSpeedCost.text = laserSpeedCostPrefix + MoneyHandler.ConvertMoney(laserSpeedCostValue);
-        }
 
-        // update mutiplier
-        if (healthMultiplierValue != (1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipLifeAmount.ToString(), 0)))
+        // set laser speed cost and text
+        laserSpeedCostValue = PlayerPrefs.GetFloat(PlayerPrefNames.LaserSpeedCost.ToString(), ConfigUtils.LaserSpeedCost);
+        if (laserSpeedMultiplierValue >= maxMultiplier)
         {
-            healthMultiplierValue = 1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipLifeAmount.ToString(), 0);
-            healthMultiplier.text = healthMultiplierPrefix + healthMultiplierValue.ToString();
+            laserSpeedCost.text = max;
         }
-        if (moveMultiplierValue != (1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipMoveSpeed.ToString(), 0)))
+        else
         {
-            moveMultiplierValue = 1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipMoveSpeed.ToString(), 0);
-            moveMultiplier.text = moveMultiplierPrefix + moveMultiplierValue.ToString();
-        }
-        if (laserDamageMultiplierValue != 1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipLaserDamage.ToString(), 0))
-        {
-            laserDamageMultiplierValue = 1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipLaserDamage.ToString(), 0);
-            laserDamageMultiplier.text = laserDamageMultiplierPrefix + laserDamageMultiplierValue.ToString();
-        }
-        if (laserCooldownMultiplierValue != 1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipLaserCooldown.ToString(), 0))
-        {
-            laserCooldownMultiplierValue = 1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipLaserCooldown.ToString(), 0);
-            laserCooldownMultiplier.text = laserCooldownMultiplierPrefix + laserCooldownMultiplierValue.ToString();
-        }
-        if (laserSpeedMultiplierValue != 1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipLaserSpeed.ToString(), 0))
-        {
-            laserSpeedMultiplierValue = 1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipLaserSpeed.ToString(), 0);
-            laserSpeedMultiplier.text = laserSpeedMultiplierPrefix + laserSpeedMultiplierValue.ToString();
-        }
+            laserSpeedCost.text = laserSpeedCostPrefix + MoneyHandler.ConvertMoney(laserSpeedCostValue);
+        }     
     }
 
+    /// <summary>
+    /// Sets store buttons interactability
+    /// </summary>
     private void SetStoreButtons()
     {
         // player money
         float money = PlayerPrefs.GetFloat(PlayerPrefNames.PlayerMoney.ToString());
 
         // check if player has enough money for purchases
-        if (money < healthCostValue)
+        if (money < healthCostValue || healthMultiplierValue >= maxMultiplier)
         {
             // disable the health button
             Button button = GameObject.FindGameObjectWithTag("IncreaseHealth").GetComponent<Button>();
@@ -347,7 +298,7 @@ public class Store : FloatEventInvoker
             button.interactable = true;
         }
 
-        if (money < moveCostValue)
+        if (money < moveCostValue || moveMultiplierValue >= maxMultiplier)
         {
             // disable the move speed button
             Button button = GameObject.FindGameObjectWithTag("IncreaseMoveSpeed").GetComponent<Button>();
@@ -362,7 +313,7 @@ public class Store : FloatEventInvoker
             button.interactable = true;
         }
 
-        if (money < laserDamageCostValue)
+        if (money < laserDamageCostValue || laserDamageMultiplierValue >= maxMultiplier)
         {
             // diasable the laser damage button
             Button button = GameObject.FindGameObjectWithTag("IncreaseLaserDamage").GetComponent<Button>();
@@ -377,7 +328,7 @@ public class Store : FloatEventInvoker
             button.interactable = true;
         }
 
-        if (money < laserCooldownCostValue)
+        if (money < laserCooldownCostValue || laserCooldownMultiplierValue >= maxMultiplier)
         {
             // disable the laser cooldown button
             Button button = GameObject.FindGameObjectWithTag("DecreaseLaserCooldown").GetComponent<Button>();
@@ -392,7 +343,7 @@ public class Store : FloatEventInvoker
             button.interactable = true;
         }
 
-        if (money < laserSpeedCostValue)
+        if (money < laserSpeedCostValue || laserSpeedMultiplierValue >= maxMultiplier)
         {
             // disable the laser speed button
             Button button = GameObject.FindGameObjectWithTag("IncreaseLaserSpeed").GetComponent<Button>();
@@ -420,8 +371,9 @@ public class Store : FloatEventInvoker
         // play select
         AudioManager.Play(AudioName.Select);
 
-        // load main menu
-        SceneManager.LoadScene("MainMenu");
+        // crossfade load
+        GameObject.Find("LevelLoaderFade").GetComponent<LevelLoader>().LoadNextScene("MainMenu");
+
     }
 
     /// <summary>

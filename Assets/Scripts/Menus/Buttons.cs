@@ -15,7 +15,7 @@ public class Buttons : MonoBehaviour
 
     #endregion
 
-    #region Methods
+    #region Unity Methods
 
     private void Start()
     {
@@ -52,13 +52,22 @@ public class Buttons : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region Public Methods
+
     /// <summary>
     /// Handles play button click
     /// </summary>
     public void HandlePlayButtonOnClickEvent()
     {
         // Debugging ---- REMOVE
-        //PlayerPrefs.SetFloat(PlayerPrefNames.PlayerMoney.ToString(), PlayerPrefs.GetFloat(PlayerPrefNames.PlayerMoney.ToString()) + 100000000000);
+        //PlayerPrefs.SetFloat(PlayerPrefNames.PlayerMoney.ToString(), 90000000000000);
+        //PlayerPrefs.SetInt(PlayerPrefNames.AlienStoreUnlocked.ToString(), 1);
+        //PlayerPrefs.SetInt(PlayerPrefNames.HasTargetingSystem.ToString(), 1);
+        //PlayerPrefs.SetInt(PlayerPrefNames.HasMoneyMultiplier.ToString(), 1);
+        //PlayerPrefs.SetInt(PlayerPrefNames.HasMagnet.ToString(), 1);
+
 
 
         // play select
@@ -80,8 +89,11 @@ public class Buttons : MonoBehaviour
         // set time scale
         Time.timeScale = 1.0f;
 
+        // crossfade load
+        GameObject.Find("LevelLoaderFade").GetComponent<LevelLoader>().LoadNextScene("GamePlay");
+
         // load game play
-        SceneManager.LoadScene("GamePlay");
+        //SceneManager.LoadScene("GamePlay");
     }
 
     /// <summary>
@@ -92,24 +104,38 @@ public class Buttons : MonoBehaviour
         // play select
         AudioManager.Play(AudioName.Select);
 
-        // reset player prefs
+        // reset tracking player prefs
         PlayerPrefs.SetInt(PlayerPrefNames.LifetimeAliensDefeated.ToString(), 0);
         PlayerPrefs.SetInt(PlayerPrefNames.AlienStoreUnlocked.ToString(), 0);
         PlayerPrefs.SetFloat(PlayerPrefNames.PlayerMoney.ToString(), 0);
+
+        // reset store player prefs
         PlayerPrefs.SetFloat(PlayerPrefNames.ShipLaserSpeed.ToString(), 0);
         PlayerPrefs.SetFloat(PlayerPrefNames.ShipLaserDamage.ToString(), 0);
         PlayerPrefs.SetFloat(PlayerPrefNames.ShipLaserCooldown.ToString(), 0);
         PlayerPrefs.SetFloat(PlayerPrefNames.ShipMoveSpeed.ToString(), 0);
         PlayerPrefs.SetFloat(PlayerPrefNames.ShipLifeAmount.ToString(), 0);
-        PlayerPrefs.SetFloat(PlayerPrefNames.TargetingChanceAmount.ToString(), 0);
         PlayerPrefs.SetFloat(PlayerPrefNames.HealthCost.ToString(), ConfigUtils.LifeAmountCost);
         PlayerPrefs.SetFloat(PlayerPrefNames.MoveCost.ToString(), ConfigUtils.MoveSpeedCost);
         PlayerPrefs.SetFloat(PlayerPrefNames.LaserDamageCost.ToString(), ConfigUtils.LaserDamageCost);
         PlayerPrefs.SetFloat(PlayerPrefNames.LaserSpeedCost.ToString(), ConfigUtils.LaserSpeedCost);
         PlayerPrefs.SetFloat(PlayerPrefNames.LaserCooldownCost.ToString(), ConfigUtils.LaserCooldownCost);
+
+        // reset alien store player prefs
+        PlayerPrefs.SetFloat(PlayerPrefNames.TargetingChance.ToString(), 0);
+        PlayerPrefs.SetFloat(PlayerPrefNames.CriticalChance.ToString(), 0);
+        PlayerPrefs.SetFloat(PlayerPrefNames.CriticalDamage.ToString(), 0);
+        PlayerPrefs.SetFloat(PlayerPrefNames.MoneyMultiplier.ToString(), 0);
+        PlayerPrefs.SetFloat(PlayerPrefNames.MagnetRange.ToString(), 0);
         PlayerPrefs.SetFloat(PlayerPrefNames.TargetingChanceCost.ToString(), ConfigUtils.TargetingChanceCost);
+        PlayerPrefs.SetFloat(PlayerPrefNames.CriticalChanceCost.ToString(), ConfigUtils.CritChanceCost);
+        PlayerPrefs.SetFloat(PlayerPrefNames.CriticalDamageCost.ToString(), ConfigUtils.CritDamageCost);
+        PlayerPrefs.SetFloat(PlayerPrefNames.MoneyMultiplierCost.ToString(), ConfigUtils.MoneyMultiplierCost);
+        PlayerPrefs.SetFloat(PlayerPrefNames.MagnetRangeCost.ToString(), ConfigUtils.MagnetRangeCost);
         PlayerPrefs.SetInt(PlayerPrefNames.HasTargetingSystem.ToString(), 0);
-        
+        PlayerPrefs.SetInt(PlayerPrefNames.HasMoneyMultiplier.ToString(), 0);
+        PlayerPrefs.SetInt(PlayerPrefNames.HasMagnet.ToString(), 0);
+
         // set restart inactive
         Button button = GameObject.FindGameObjectWithTag("Restart").GetComponent<Button>();
         button.enabled = false;
@@ -119,6 +145,18 @@ public class Buttons : MonoBehaviour
         Button buttonA = GameObject.FindGameObjectWithTag("AlienStore").GetComponent<Button>();
         buttonA.enabled = false;
         buttonA.interactable = false;
+    }
+
+    /// <summary>
+    /// Handles setting button click
+    /// </summary>
+    public void HandleSettingsButtonOnClickEvent()
+    {
+        // play select
+        AudioManager.Play(AudioName.Select);
+
+        // crossfade load
+        GameObject.Find("LevelLoaderFade").GetComponent<LevelLoader>().LoadNextScene("Settings");
     }
 
     /// <summary>
@@ -166,8 +204,8 @@ public class Buttons : MonoBehaviour
         // set time scale
         Time.timeScale = 1.0f;
 
-        // load main menu
-        SceneManager.LoadScene("MainMenu");
+        // crossfade load
+        GameObject.Find("LevelLoaderFade").GetComponent<LevelLoader>().LoadNextScene("MainMenu");
     }
 
     /// <summary>
@@ -198,8 +236,8 @@ public class Buttons : MonoBehaviour
         // play select
         AudioManager.Play(AudioName.Select);
 
-        // load store scene
-        SceneManager.LoadScene("Store");
+        // crossfade load
+        GameObject.Find("LevelLoaderFade").GetComponent<LevelLoader>().LoadNextScene("Store");
     }
 
     /// <summary>
@@ -210,8 +248,8 @@ public class Buttons : MonoBehaviour
         // play select
         AudioManager.Play(AudioName.Select);
 
-        // load alien store
-        SceneManager.LoadScene("AlienStore");
+        // crossfade load
+        GameObject.Find("LevelLoaderFade").GetComponent<LevelLoader>().LoadNextScene("AlienStore");
     }
 
     /// <summary>
@@ -222,7 +260,8 @@ public class Buttons : MonoBehaviour
         // play select
         AudioManager.Play(AudioName.Select);
 
-        SceneManager.LoadScene("MainMenu");
+        // crossfade load
+        GameObject.Find("LevelLoaderFade").GetComponent<LevelLoader>().LoadNextScene("MainMenu");
     }
 
     #endregion

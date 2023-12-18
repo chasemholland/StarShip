@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.IO;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 /// <summary>
 /// Configuration data retrieved from csv or set to default values
@@ -94,6 +95,22 @@ public class ConfigData
     }
 
     /// <summary>
+    /// Gets the money multiplier
+    /// </summary>
+    public float Ship1MoneyMultiplier
+    {
+        get { return values[ConfigDataName.Ship1MoneyMultiplier]; }
+    }
+
+    /// <summary>
+    /// Gets the magnet range
+    /// </summary>
+    public float Ship1MagnetRange
+    {
+        get { return values[ConfigDataName.Ship1MagnetRange]; }
+    }
+
+    /// <summary>
     /// Gets the alien laser damage
     /// </summary>
     public float Alien1LaserDamage
@@ -126,19 +143,35 @@ public class ConfigData
     }
 
     /// <summary>
-    /// Gets the alien movement speed
+    /// Gets the alien x movement speed
     /// </summary>
-    public float Alien1MoveSpeed
+    public float Alien1MoveSpeedX
     {
-        get { return values[ConfigDataName.Alien1MoveSpeed]; }
+        get { return values[ConfigDataName.Alien1MoveSpeedX]; }
     }
 
     /// <summary>
-    /// Gets the alien movement delay
+    /// Gets the alien y movement speed
     /// </summary>
-    public float Alien1MoveDelay
+    public float Alien1MoveSpeedY
     {
-        get { return values[ConfigDataName.Alien1MoveDelay]; }
+        get { return values[ConfigDataName.Alien1MoveSpeedY]; }
+    }
+
+    /// <summary>
+    /// Gets the minimum alien movement delay
+    /// </summary>
+    public float Alien1MoveDelayMin
+    {
+        get { return values[ConfigDataName.Alien1MoveDelayMin]; }
+    }
+
+    /// <summary>
+    /// Gets the max alien movement delay
+    /// </summary>
+    public float Alien1MoveDelayMax
+    {
+        get { return values[ConfigDataName.Alien1MoveDelayMax]; }
     }
 
     /// <summary>
@@ -182,19 +215,35 @@ public class ConfigData
     }
 
     /// <summary>
-    /// Gets the alien movement speed
+    /// Gets the alien x movement speed
     /// </summary>
-    public float Alien2MoveSpeed
+    public float Alien2MoveSpeedX
     {
-        get { return values[ConfigDataName.Alien2MoveSpeed]; }
+        get { return values[ConfigDataName.Alien2MoveSpeedX]; }
     }
 
     /// <summary>
-    /// Gets the alien movement delay
+    /// Gets the alien y movement speed
     /// </summary>
-    public float Alien2MoveDelay
+    public float Alien2MoveSpeedY
     {
-        get { return values[ConfigDataName.Alien2MoveDelay]; }
+        get { return values[ConfigDataName.Alien2MoveSpeedY]; }
+    }
+
+    /// <summary>
+    /// Gets the minimum alien movement delay
+    /// </summary>
+    public float Alien2MoveDelayMin
+    {
+        get { return values[ConfigDataName.Alien2MoveDelayMin]; }
+    }
+
+    /// <summary>
+    /// Gets the max alien movement delay
+    /// </summary>
+    public float Alien2MoveDelayMax
+    {
+        get { return values[ConfigDataName.Alien2MoveDelayMax]; }
     }
 
     /// <summary>
@@ -238,19 +287,35 @@ public class ConfigData
     }
 
     /// <summary>
-    /// Gets the alien movement speed
+    /// Gets the alien x movement speed
     /// </summary>
-    public float Alien3MoveSpeed
+    public float Alien3MoveSpeedX
     {
-        get { return values[ConfigDataName.Alien3MoveSpeed]; }
+        get { return values[ConfigDataName.Alien3MoveSpeedX]; }
     }
 
     /// <summary>
-    /// Gets the alien movement delay
+    /// Gets the alien y movement speed
     /// </summary>
-    public float Alien3MoveDelay
+    public float Alien3MoveSpeedY
     {
-        get { return values[ConfigDataName.Alien3MoveDelay]; }
+        get { return values[ConfigDataName.Alien3MoveSpeedY]; }
+    }
+
+    /// <summary>
+    /// Gets the minimum alien movement delay
+    /// </summary>
+    public float Alien3MoveDelayMin
+    {
+        get { return values[ConfigDataName.Alien3MoveDelayMin]; }
+    }
+
+    /// <summary>
+    /// Gets the max alien movement delay
+    /// </summary>
+    public float Alien3MoveDelayMax
+    {
+        get { return values[ConfigDataName.Alien3MoveDelayMax]; }
     }
 
     /// <summary>
@@ -334,6 +399,22 @@ public class ConfigData
     }
 
     /// <summary>
+    /// Gets the money multiplier cost
+    /// </summary>
+    public float MoneyMultiplierCost
+    {
+        get { return values[ConfigDataName.MoneyMultiplierCost]; }
+    }
+
+    /// <summary>
+    /// Gets the manget range cost
+    /// </summary>
+    public float MagnetRangeCost
+    {
+        get { return values[ConfigDataName.MagnetRangeCost]; }
+    }
+
+    /// <summary>
     /// Gets the updgrade amount
     /// </summary>
     public float UpgradeAmount
@@ -347,6 +428,14 @@ public class ConfigData
     public float UpgradeCostMultiplier
     {
         get { return values[ConfigDataName.UpgradeCostMultiplier]; }
+    }
+
+    /// <summary>
+    /// Gets the max multiplier value for main store
+    /// </summary>
+    public float StoreMaxMultiplier
+    {
+        get { return values[ConfigDataName.StoreMaxMultiplier]; }
     }
 
     #endregion
@@ -417,31 +506,39 @@ public class ConfigData
         values.Add(ConfigDataName.Ship1LaserCooldown, 0.5f);
         values.Add(ConfigDataName.Ship1LaserSpeed, 8);
         values.Add(ConfigDataName.Ship1MoveSpeed, 10);
-        values.Add(ConfigDataName.Ship1LifeAmount, 6);
-        values.Add(ConfigDataName.Ship1LaserDamage, 1);
-        values.Add(ConfigDataName.Ship1TargetingChance, 5);
+        values.Add(ConfigDataName.Ship1LifeAmount, 600);
+        values.Add(ConfigDataName.Ship1LaserDamage, 100);
+        values.Add(ConfigDataName.Ship1TargetingChance, 0.5f);
         values.Add(ConfigDataName.Ship1CritChance, 0.1f);
         values.Add(ConfigDataName.Ship1CritDamageMulti, 2);
+        values.Add(ConfigDataName.Ship1MoneyMultiplier, 0);
+        values.Add(ConfigDataName.Ship1MagnetRange, 1);
         values.Add(ConfigDataName.Alien1LaserDamage, 0.5f);
         values.Add(ConfigDataName.Alien1LaserCooldownMin, 3);
         values.Add(ConfigDataName.Alien1LaserCooldownMax, 6);
         values.Add(ConfigDataName.Alien1LaserSpeed, 5);
-        values.Add(ConfigDataName.Alien1MoveSpeed, 5);
-        values.Add(ConfigDataName.Alien1MoveDelay, 0.5f);
+        values.Add(ConfigDataName.Alien1MoveSpeedX, 5);
+        values.Add(ConfigDataName.Alien1MoveSpeedY, 1.25f);
+        values.Add(ConfigDataName.Alien1MoveDelayMin, 0.75f);
+        values.Add(ConfigDataName.Alien1MoveDelayMax, 1.25f);
         values.Add(ConfigDataName.Alien1LifeAmount, 2);
         values.Add(ConfigDataName.Alien2LaserDamage, 0.75f);
         values.Add(ConfigDataName.Alien2LaserCooldownMin, 3);
         values.Add(ConfigDataName.Alien2LaserCooldownMax, 6);
         values.Add(ConfigDataName.Alien2LaserSpeed, 5);
-        values.Add(ConfigDataName.Alien2MoveSpeed, 4);
-        values.Add(ConfigDataName.Alien2MoveDelay, 0.5f);
+        values.Add(ConfigDataName.Alien2MoveSpeedX, 4);
+        values.Add(ConfigDataName.Alien2MoveSpeedY, 1);
+        values.Add(ConfigDataName.Alien2MoveDelayMin, 0.75f);
+        values.Add(ConfigDataName.Alien2MoveDelayMax, 1.25f);
         values.Add(ConfigDataName.Alien2LifeAmount, 10);
         values.Add(ConfigDataName.Alien3LaserDamage, 1);
         values.Add(ConfigDataName.Alien3LaserCooldownMin, 3);
         values.Add(ConfigDataName.Alien3LaserCooldownMax, 6);
         values.Add(ConfigDataName.Alien3LaserSpeed, 5);
-        values.Add(ConfigDataName.Alien3MoveSpeed, 3);
-        values.Add(ConfigDataName.Alien3MoveDelay, 0.5f);
+        values.Add(ConfigDataName.Alien3MoveSpeedX, 7);
+        values.Add(ConfigDataName.Alien3MoveSpeedY, 2);
+        values.Add(ConfigDataName.Alien3MoveDelayMin, 1.25f);
+        values.Add(ConfigDataName.Alien3MoveDelayMax, 1.75f);
         values.Add(ConfigDataName.Alien3LifeAmount, 25);
         values.Add(ConfigDataName.LaserCooldownCost, 10);
         values.Add(ConfigDataName.LaserDamageCost, 10);
@@ -449,11 +546,14 @@ public class ConfigData
         values.Add(ConfigDataName.MoveSpeedCost, 10);
         values.Add(ConfigDataName.LifeAmountCost, 10);
         values.Add(ConfigDataName.TargetingSystemCost, 2000);
-        values.Add(ConfigDataName.TargetingChanceCost, 100);
-        values.Add(ConfigDataName.CritChanceCost, 100);
-        values.Add(ConfigDataName.CritDamageCost, 100);
+        values.Add(ConfigDataName.TargetingChanceCost, 1000);
+        values.Add(ConfigDataName.CritChanceCost, 1000);
+        values.Add(ConfigDataName.CritDamageCost, 1000);
+        values.Add(ConfigDataName.MoneyMultiplierCost, 1000);
+        values.Add(ConfigDataName.MagnetRangeCost, 1000);
         values.Add(ConfigDataName.UpgradeAmount, 0.25f);
         values.Add(ConfigDataName.UpgradeCostMultiplier, 1.75f);
+        values.Add(ConfigDataName.StoreMaxMultiplier, 4.33f);
     }
 
     #endregion

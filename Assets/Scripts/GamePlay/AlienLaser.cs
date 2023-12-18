@@ -29,15 +29,15 @@ public class AlienLaser : FloatEventInvoker
     /// </summary>
     void Start()
     {
-        if (gameObject.tag == "Alien1Laser")
+        if (gameObject.CompareTag("Alien1Laser"))
         {
             laserSpeed = ConfigUtils.Alien1LaserSpeed;
         }
-        else if (gameObject.tag == "Alien2Laser")
+        else if (gameObject.CompareTag("Alien2Laser"))
         {
             laserSpeed = ConfigUtils.Alien2LaserSpeed;
         }
-        else if (gameObject.tag == "Alien3Laser")
+        else if (gameObject.CompareTag("Alien3Laser"))
         {
             laserSpeed = ConfigUtils.Alien3LaserSpeed;
         }
@@ -61,20 +61,17 @@ public class AlienLaser : FloatEventInvoker
             float rotation = Mathf.Atan2(-direction.y, -direction.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.Euler(0, 0, rotation + 90);
         }
+        // destroy unnecessary lasers
+        else
+        {
+            Destroy(gameObject);
+        }
 
         // set and run despawn timer
         despawnTimer = gameObject.AddComponent<Timer>();
         despawnTimer.Duration = 4;
         despawnTimer.Run();
         despawnTimer.AddTimerFinishedListener(HandleLaserDespawn);
-    }
-
-    /// <summary>
-    /// Update is called once per frame
-    /// </summary>
-    void Update()
-    {
-
     }
 
     /// <summary>
@@ -103,14 +100,14 @@ public class AlienLaser : FloatEventInvoker
 
     }
 
-        #endregion
+    #endregion
 
-        #region Private Methods
+    #region Private Methods
 
-        /// <summary>
-        /// Destroys the game object on timer finish
-        /// </summary>
-        private void HandleLaserDespawn()
+    /// <summary>
+    /// Destroys the game object on timer finish
+    /// </summary>
+    private void HandleLaserDespawn()
     {
         Destroy(gameObject);
     }

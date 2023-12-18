@@ -121,7 +121,7 @@ public class LevelBuilder : FloatEventInvoker
         float topSpawn = ScreenUtils.ScreenTop - (alienHeight / 2f) - 0.5f;
 
         // get min spawn y
-        float bottomSpawn = ScreenUtils.ScreenTop - (alienHeight * 3f);
+        float bottomSpawn = ScreenUtils.ScreenTop - (alienHeight * 4f);
 
         // get max spawn x
         float leftSpawn = ScreenUtils.ScreenLeft + (alienWidth / 2f);

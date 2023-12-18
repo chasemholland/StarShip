@@ -37,8 +37,8 @@ public class ShipLaser : FloatEventInvoker
 
             // target chance
             float lockedOn = Random.Range(0.1f, 1.1f);
-            float targetingChance = ConfigUtils.Ship1TargetingChance * (1 + PlayerPrefs.GetFloat(PlayerPrefNames.TargetingChanceAmount.ToString(), 0));
-            if (lockedOn <= targetingChance)
+            float targetingChance = ConfigUtils.Ship1TargetingChance * (1 + PlayerPrefs.GetFloat(PlayerPrefNames.TargetingChance.ToString(), 0));
+            if (lockedOn <= targetingChance || targetingChance >= 1)
             {
                 // check if aliens on list
                 if (aliens.Count > 0)
@@ -75,14 +75,6 @@ public class ShipLaser : FloatEventInvoker
         despawnTimer.Duration = 4;
         despawnTimer.Run();
         despawnTimer.AddTimerFinishedListener(HandleLaserDespawn);
-    }
-
-    /// <summary>
-    /// Update is called once per frame
-    /// </summary>
-    void Update()
-    {
-        
     }
 
     #endregion

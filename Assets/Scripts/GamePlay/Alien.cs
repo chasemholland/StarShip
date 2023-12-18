@@ -1,7 +1,9 @@
+using System;
 using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+//using UnityEngine.UIElements;
 
 /// <summary>
 /// Alien behaviour
@@ -53,9 +55,12 @@ public class Alien : FloatEventInvoker
     int shieldCount;
 
     // alien movement support
-    Timer moveTimer;
-    int moveDirection;
-    float moveSpeed;
+    Timer moveXTimer;
+    Timer moveYTimer;
+    int moveXDirection;
+    int moveYDirection;
+    float moveXSpeed;
+    float moveYSpeed;
     Rigidbody2D alienBody;
 
     // alien behavior support
@@ -81,12 +86,16 @@ public class Alien : FloatEventInvoker
     /// </summary>
     void Start()
     {
+        // add as invoker for boss killed event
+        unityEvents.Add(EventName.BossKilledEvent, new BossKilledEvent());
+        EventManager.AddInvoker(EventName.BossKilledEvent, this);
+
         // get player damage
-        playerDamage = ConfigUtils.Ship1LaserDamage * (1f + PlayerPrefs.GetFloat(PlayerPrefNames.ShipLaserDamage.ToString(), 0));
+        playerDamage = ConfigUtils.Ship1LaserDamage * (1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipLaserDamage.ToString(), 0));
 
         // get player crit
-        playerCritChance = ConfigUtils.Ship1CritChance;
-        playerCritMultiplier = ConfigUtils.Ship1CritDamageMulti;
+        playerCritChance = ConfigUtils.Ship1CritChance * ( 1 + PlayerPrefs.GetFloat(PlayerPrefNames.CriticalChance.ToString(), 0));
+        playerCritMultiplier = ConfigUtils.Ship1CritDamageMulti * (1 + PlayerPrefs.GetFloat(PlayerPrefNames.CriticalDamage.ToString(), 0));
 
         // get reference to alien
         alienBody = GetComponent<Rigidbody2D>();
@@ -112,11 +121,14 @@ public class Alien : FloatEventInvoker
     /// </summary>
     void FixedUpdate()
     {
-        // check for clamping
-        float newX = CheckClamping(transform.position.x + (moveDirection * moveSpeed * Time.deltaTime));
+        // check for x clamping
+        float newX = CheckXClamping(transform.position.x + (moveXDirection * moveXSpeed * Time.deltaTime));
+
+        // check for y clamping
+        float newY = CheckYClamping(transform.position.y + (moveYDirection * moveYSpeed * Time.deltaTime));
 
         // move the alien
-        alienBody.MovePosition(new Vector2(newX, transform.position.y));
+        alienBody.MovePosition(new Vector2(newX, newY));
 
     }
 
@@ -144,7 +156,7 @@ public class Alien : FloatEventInvoker
             // store mothership health for next waves
             if (gameObject.CompareTag("Alien3"))
             {
-                PlayerPrefs.SetFloat(PlayerPrefNames.MothershipLifeAmount.ToString(), PlayerPrefs.GetFloat(PlayerPrefNames.MothershipLifeAmount.ToString()) - playerDamage);
+                PlayerPrefs.SetFloat(PlayerPrefNames.MothershipLifeAmount.ToString(), PlayerPrefs.GetFloat(PlayerPrefNames.MothershipLifeAmount.ToString()) - MathF.Round(playerDamage * playerCritMultiplier, 0));
             }
 
             // check if alien dead
@@ -167,13 +179,14 @@ public class Alien : FloatEventInvoker
         // spawn damage text
         GameObject damageText = Instantiate(prefabDamageText, transform.position, Quaternion.identity);
 
-        if (Random.Range(0.0f, 1.1f) < playerCritChance)
+        // check for critical hit
+        if (UnityEngine.Random.Range(0.0f, 1.1f) < playerCritChance)
         {
             // play laser hit ------ TO BE CHANGED TO SEPERATE NOISE ------------------------------
             AudioManager.Play(AudioName.ShipLaserHit);
 
             // set damage
-            damage = playerDamage * playerCritMultiplier;
+            damage = MathF.Round(playerDamage * playerCritMultiplier, 0);
 
         }
         else
@@ -287,10 +300,10 @@ public class Alien : FloatEventInvoker
             // spawn explosions
             for (int e = 0; e < 6; e++)
             {
-                Instantiate(prefabAlienExplosion, new Vector3(transform.position.x - (alienWidth / Random.Range(2, 20)), transform.position.y - (alienHeight / Random.Range(2, 20)), 0f), Quaternion.identity);
-                Instantiate(prefabAlienExplosion, new Vector3(transform.position.x + (alienWidth / Random.Range(2, 20)), transform.position.y + (alienHeight / Random.Range(2, 20)), 0f), Quaternion.identity);
-                Instantiate(prefabAlienExplosion, new Vector3(transform.position.x - (alienWidth / Random.Range(2, 20)), transform.position.y + (alienHeight / Random.Range(2, 20)), 0f), Quaternion.identity);
-                Instantiate(prefabAlienExplosion, new Vector3(transform.position.x + (alienWidth / Random.Range(2, 20)), transform.position.y - (alienHeight / Random.Range(2, 20)), 0f), Quaternion.identity);
+                Instantiate(prefabAlienExplosion, new Vector3(transform.position.x - (alienWidth / UnityEngine.Random.Range(2, 20)), transform.position.y - (alienHeight / UnityEngine.Random.Range(2, 20)), 0f), Quaternion.identity);
+                Instantiate(prefabAlienExplosion, new Vector3(transform.position.x + (alienWidth / UnityEngine.Random.Range(2, 20)), transform.position.y + (alienHeight / UnityEngine.Random.Range(2, 20)), 0f), Quaternion.identity);
+                Instantiate(prefabAlienExplosion, new Vector3(transform.position.x - (alienWidth / UnityEngine.Random.Range(2, 20)), transform.position.y + (alienHeight / UnityEngine.Random.Range(2, 20)), 0f), Quaternion.identity);
+                Instantiate(prefabAlienExplosion, new Vector3(transform.position.x + (alienWidth / UnityEngine.Random.Range(2, 20)), transform.position.y - (alienHeight / UnityEngine.Random.Range(2, 20)), 0f), Quaternion.identity);
             }
 
             // destroy alien
@@ -304,22 +317,25 @@ public class Alien : FloatEventInvoker
 
             // set alien store unlocked
             PlayerPrefs.SetInt(PlayerPrefNames.AlienStoreUnlocked.ToString(), 1);
+
+            // activate boss killed event
+            unityEvents[EventName.BossKilledEvent].Invoke(0);
         }
     }
 
     /// <summary>
     /// Clamp ship within the bounds of the screen
     /// </summary>
-    private float CheckClamping(float xPosition)
+    private float CheckXClamping(float xPosition)
     {
         if (xPosition + (alienWidth / 2) >= ScreenUtils.ScreenRight)
         {
-            moveDirection *= -1;
+            moveXDirection *= -1;
             return ScreenUtils.ScreenRight - (alienWidth / 2);
         }
         else if (xPosition - (alienWidth / 2) <= ScreenUtils.ScreenLeft)
         {
-            moveDirection *= -1;;
+            moveXDirection *= -1;;
             return ScreenUtils.ScreenLeft + (alienWidth / 2);
         }
         else
@@ -329,16 +345,50 @@ public class Alien : FloatEventInvoker
     }
 
     /// <summary>
-    /// Moves the alien when timer finished
+    /// Clamp withing the top half of screen
     /// </summary>
-    private void HandleMoveTimerFinished()
+    /// <param name="yPosition"></param>
+    /// <returns></returns>
+    private float CheckYClamping(float yPosition)
     {
-        // pick a random direction
-        moveDirection = (Random.Range(0, 2) * 2 - 1);
+        if (yPosition + alienHeight >= ScreenUtils.ScreenTop)
+        {
+            moveYDirection *= -1;
+            return ScreenUtils.ScreenTop - alienHeight;
+        }
+        else if (yPosition - (alienHeight / 2) <= 0)
+        {
+            moveYDirection *= -1; ;
+            return  alienHeight / 2;
+        }
+        else
+        {
+            return yPosition;
+        }
+    }
+
+    /// <summary>
+    /// Moves the alien right/left when timer finished
+    /// </summary>
+    private void HandleMoveXTimerFinished()
+    {
+        // pick a random x direction
+        moveXDirection = (UnityEngine.Random.Range(0, 2) * 2 - 1);
 
         // restart the move timer
-        moveTimer.Run();
+        moveXTimer.Run();
+    }
 
+    /// <summary>
+    /// Moves the alien up/down when timer finished
+    /// </summary>
+    private void HandleMoveYTimerFinished()
+    {
+        // pick a random y direction
+        moveYDirection = (UnityEngine.Random.Range(0, 2) * 2 - 1);
+
+        // restart the move timer
+        moveYTimer.Run();
     }
 
     /// <summary>
@@ -353,7 +403,7 @@ public class Alien : FloatEventInvoker
             Instantiate(prefabAlienLaser, new Vector3(transform.position.x, transform.position.y - (alienHeight / 2f), 0f), Quaternion.identity);
 
             // set new cooldown
-            shootTimer.Duration = Random.Range(ConfigUtils.Alien1LaserCooldownMin, ConfigUtils.Alien1LaserCooldownMax);
+            shootTimer.Duration = UnityEngine.Random.Range(ConfigUtils.Alien1LaserCooldownMin, ConfigUtils.Alien1LaserCooldownMax);
         }
         else if (gameObject.CompareTag("Alien2"))
         {
@@ -363,7 +413,7 @@ public class Alien : FloatEventInvoker
             Instantiate(prefabAlienLaser, new Vector3(transform.position.x - (alienWidth / 4f), transform.position.y - (alienHeight / 2f), 0f), Quaternion.identity);
 
             // set new cooldown
-            shootTimer.Duration = Random.Range(ConfigUtils.Alien2LaserCooldownMin, ConfigUtils.Alien2LaserCooldownMax);
+            shootTimer.Duration = UnityEngine.Random.Range(ConfigUtils.Alien2LaserCooldownMin, ConfigUtils.Alien2LaserCooldownMax);
         }
         else if (gameObject.CompareTag("Alien3"))
         {
@@ -375,7 +425,7 @@ public class Alien : FloatEventInvoker
             Instantiate(prefabAlienLaser, new Vector3(transform.position.x - (alienWidth / 8f * 1.4f), transform.position.y - (alienHeight / 2.4f), 0f), Quaternion.identity);
 
             // set new cooldown
-            shootTimer.Duration = Random.Range(ConfigUtils.Alien3LaserCooldownMin, ConfigUtils.Alien3LaserCooldownMax);
+            shootTimer.Duration = UnityEngine.Random.Range(ConfigUtils.Alien3LaserCooldownMin, ConfigUtils.Alien3LaserCooldownMax);
         }
         
         // run the shoot timer
@@ -389,10 +439,10 @@ public class Alien : FloatEventInvoker
     {
         if (gameObject.CompareTag("Alien1") || gameObject.CompareTag("Alien2"))
         {
-            int hasPickup = Random.Range(0, 11);
+            int hasPickup = UnityEngine.Random.Range(0, 11);
             if (hasPickup <= 8)
             {
-                int hasType = Random.Range(0, 21);
+                int hasType = UnityEngine.Random.Range(0, 21);
                 if (gameObject.CompareTag("Alien1"))
                 {
                     if (hasType <= 1)
@@ -436,10 +486,10 @@ public class Alien : FloatEventInvoker
         }
         else if (gameObject.CompareTag("Alien3"))
         {
-            coinCount = Random.Range(10, 21);
-            coinBagCount = Random.Range(4, 11);
-            heartCount = Random.Range(1, 4);
-            shieldCount = Random.Range(1, 4);
+            coinCount = UnityEngine.Random.Range(10, 21);
+            coinBagCount = UnityEngine.Random.Range(4, 11);
+            heartCount = UnityEngine.Random.Range(1, 4);
+            shieldCount = UnityEngine.Random.Range(1, 4);
         }
     }
 
@@ -451,19 +501,22 @@ public class Alien : FloatEventInvoker
         // get laser speed, move speed, and health
         if (gameObject.CompareTag("Alien1"))
         {
-            moveSpeed = ConfigUtils.Alien1MoveSpeed;
+            moveXSpeed = ConfigUtils.Alien1MoveSpeedX;
+            moveYSpeed = ConfigUtils.Alien1MoveSpeedY;
             healthRemaining = ConfigUtils.Alien1LifeAmount;
             maxHealth = healthRemaining;
         }
         else if (gameObject.CompareTag("Alien2"))
         {
-            moveSpeed = ConfigUtils.Alien2MoveSpeed;
+            moveXSpeed = ConfigUtils.Alien2MoveSpeedX;
+            moveYSpeed = ConfigUtils.Alien2MoveSpeedY;
             healthRemaining = ConfigUtils.Alien2LifeAmount;
             maxHealth = healthRemaining;
         }
         else if (gameObject.CompareTag("Alien3"))
         {
-            moveSpeed = ConfigUtils.Alien3MoveSpeed;
+            moveXSpeed = ConfigUtils.Alien3MoveSpeedX;
+            moveYSpeed = ConfigUtils.Alien3MoveSpeedY;
             healthRemaining = PlayerPrefs.GetFloat(PlayerPrefNames.MothershipLifeAmount.ToString());
             maxHealth = ConfigUtils.Alien3LifeAmount;
         }
@@ -471,8 +524,11 @@ public class Alien : FloatEventInvoker
         // set healthbar value
         healthBar.value = healthRemaining / maxHealth;
 
-        // set initial move direction
-        moveDirection = (Random.Range(0, 2) * 2 - 1);
+        // set initial move direction x
+        moveXDirection = (UnityEngine.Random.Range(0, 2) * 2 - 1);
+
+        // set initial move direction y
+        moveYDirection = (UnityEngine.Random.Range(0, 2) * 2 - 1);
 
     }
 
@@ -483,32 +539,40 @@ public class Alien : FloatEventInvoker
     {
         // initialize the shoot, move, and tracking timers
         shootTimer = gameObject.AddComponent<Timer>();
-        moveTimer = gameObject.AddComponent<Timer>();
+        moveXTimer = gameObject.AddComponent<Timer>();
+        moveYTimer = gameObject.AddComponent<Timer>();
         if (gameObject.CompareTag("Alien1"))
         {
-            shootTimer.Duration = Random.Range(ConfigUtils.Alien1LaserCooldownMin, ConfigUtils.Alien1LaserCooldownMax);
-            moveTimer.Duration = ConfigUtils.Alien1MoveDelay;
+            shootTimer.Duration = UnityEngine.Random.Range(ConfigUtils.Alien1LaserCooldownMin, ConfigUtils.Alien1LaserCooldownMax);
+            moveXTimer.Duration = UnityEngine.Random.Range(ConfigUtils.Alien1MoveDelayMin, ConfigUtils.Alien1MoveDelayMax);
+            moveYTimer.Duration = UnityEngine.Random.Range(ConfigUtils.Alien1MoveDelayMin, ConfigUtils.Alien1MoveDelayMax);
         }
         else if (gameObject.CompareTag("Alien2"))
         {
-            shootTimer.Duration = Random.Range(ConfigUtils.Alien2LaserCooldownMin, ConfigUtils.Alien2LaserCooldownMax);
-            moveTimer.Duration = ConfigUtils.Alien2MoveDelay;
+            shootTimer.Duration = UnityEngine.Random.Range(ConfigUtils.Alien2LaserCooldownMin, ConfigUtils.Alien2LaserCooldownMax);
+            moveXTimer.Duration = UnityEngine.Random.Range(ConfigUtils.Alien2MoveDelayMin, ConfigUtils.Alien2MoveDelayMax);
+            moveYTimer.Duration = UnityEngine.Random.Range(ConfigUtils.Alien2MoveDelayMin, ConfigUtils.Alien2MoveDelayMax);
         }
         else if (gameObject.CompareTag("Alien3"))
         {
-            shootTimer.Duration = Random.Range(ConfigUtils.Alien3LaserCooldownMin, ConfigUtils.Alien3LaserCooldownMax);
-            moveTimer.Duration = ConfigUtils.Alien3MoveDelay;
+            shootTimer.Duration = UnityEngine.Random.Range(ConfigUtils.Alien3LaserCooldownMin, ConfigUtils.Alien3LaserCooldownMax);
+            moveXTimer.Duration = UnityEngine.Random.Range(ConfigUtils.Alien3MoveDelayMin, ConfigUtils.Alien3MoveDelayMax);
+            moveYTimer.Duration = UnityEngine.Random.Range(ConfigUtils.Alien3MoveDelayMin, ConfigUtils.Alien3MoveDelayMax);
         }
 
         // run the timers
         shootTimer.Run();
-        moveTimer.Run();
+        moveXTimer.Run();
+        moveYTimer.Run();
 
         // add timer as listener for shoot laser event
         shootTimer.AddTimerFinishedListener(HandleShootTimerFinished);
 
-        // add timer as listener for move right event
-        moveTimer.AddTimerFinishedListener(HandleMoveTimerFinished);
+        // add timer as listener for move right/left event
+        moveXTimer.AddTimerFinishedListener(HandleMoveXTimerFinished);
+
+        // add timer as listener for move up/down event
+        moveYTimer.AddTimerFinishedListener(HandleMoveYTimerFinished);
 
     }
 
@@ -520,8 +584,8 @@ public class Alien : FloatEventInvoker
     {
         // create pickup and get moving
         GameObject pickup = Instantiate(gameObject, new Vector3(
-            Random.Range(transform.position.x - (alienWidth / 2f), transform.position.x + (alienWidth / 2f)), 
-            Random.Range(transform.position.y - (alienHeight / 2f), transform.position.y + (alienHeight / 2f)), 0f), 
+            UnityEngine.Random.Range(transform.position.x - (alienWidth / 2f), transform.position.x + (alienWidth / 2f)), 
+            UnityEngine.Random.Range(transform.position.y - (alienHeight / 2f), transform.position.y + (alienHeight / 2f)), 0f), 
             Quaternion.identity);
         pickup.GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, -3f), ForceMode2D.Impulse);
 

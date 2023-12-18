@@ -34,6 +34,10 @@ TagManager:
   - TargetingSystem
   - TargetingChance
   - Pause
+  - MuteMusic
+  - UnMuteMusic
+  - MuteEffects
+  - UnMuteEffects
   layers:
   - Default
   - TransparentFX
@@ -73,6 +77,9 @@ TagManager:
     locked: 0
   - name: Shield
     uniqueID: 75583833
+    locked: 0
+  - name: GamePlayUI
+    uniqueID: 1624736067
     locked: 0
   - name: Explosion
     uniqueID: 1005018025

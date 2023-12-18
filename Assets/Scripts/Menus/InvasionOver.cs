@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -27,7 +28,7 @@ public class InvasionOver : MonoBehaviour
 
     [SerializeField]
     TextMeshProUGUI bonusCoinsText;
-    int bonusCoinsValue;
+    float bonusCoinsValue;
 
     [SerializeField]
     TextMeshProUGUI bonusCoinsCalcText;
@@ -38,6 +39,8 @@ public class InvasionOver : MonoBehaviour
     TextMeshProUGUI spaceCoinsTotalText;
     float spaceCoinsTotalValue;
     string spaceCoinsTotalPrefix = "SPACE COINS: ";
+
+    float moneyMultiplier;
 
     #endregion
 
@@ -52,6 +55,17 @@ public class InvasionOver : MonoBehaviour
         if (LoopingAudioManager.Playing == AudioName.GamePlayAmbient)
         {
             LoopingAudioManager.Switch(AudioName.Ambient);
+        }
+
+        // set money multiplier
+        if (PlayerPrefs.GetInt(PlayerPrefNames.HasMoneyMultiplier.ToString(), 0) == 1)
+        {
+            moneyMultiplier = ConfigUtils.Ship1MoneyMultiplier * (1 + PlayerPrefs.GetFloat(PlayerPrefNames.MoneyMultiplier.ToString(), 0));
+        }
+        else
+        {
+            // default to 1, no multiplier
+            moneyMultiplier = 1;
         }
 
         // set values
@@ -78,7 +92,7 @@ public class InvasionOver : MonoBehaviour
         redsDefeatedValue = PlayerPrefs.GetInt(PlayerPrefNames.RedsDefeated.ToString(), 0);
         greensDefeatedValue = PlayerPrefs.GetInt(PlayerPrefNames.GreensDefeated.ToString(), 0);
         mothershipsDefeatedValue = PlayerPrefs.GetInt(PlayerPrefNames.MotherShipsDefeated.ToString(), 0);
-        bonusCoinsValue = (50 * redsDefeatedValue) + (100 * greensDefeatedValue) + (2000 * mothershipsDefeatedValue);
+        bonusCoinsValue = MathF.Round(((50 * redsDefeatedValue) + (100 * greensDefeatedValue) + (2000 * mothershipsDefeatedValue)) * moneyMultiplier, 0);
         spaceCoinsTotalValue = PlayerPrefs.GetFloat(PlayerPrefNames.PlayerMoney.ToString(), 0) + bonusCoinsValue;
 
         // set new player money value
@@ -94,7 +108,7 @@ public class InvasionOver : MonoBehaviour
         aliensDefeatedText.text = aliensDefeatedPrefix + aliensDefeatedValue.ToString();
         mothershipsDefeatedText.text = mothershipsDefeatedPrefix + mothershipsDefeatedValue.ToString();
         bonusCoinsText.text = MoneyHandler.ConvertMoney(bonusCoinsValue);
-        bonusCoinsCalcText.text = "Reds(" + redsDefeatedValue.ToString() + " x 50) Greens(" + greensDefeatedValue.ToString() + " x 100) Blues(" + mothershipsDefeatedValue.ToString() + " x 2000)";
+        bonusCoinsCalcText.text = "Reds(" + redsDefeatedValue.ToString() + " x 50) Greens(" + greensDefeatedValue.ToString() + " x 100) Blues(" + mothershipsDefeatedValue.ToString() + " x 2000)" + " x " + moneyMultiplier;
         spaceCoinsTotalText.text = spaceCoinsTotalPrefix + MoneyHandler.ConvertMoney(spaceCoinsTotalValue);
     }
 

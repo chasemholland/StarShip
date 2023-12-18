@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/InvasionOver.unity
     guid: e702dcba84b3e8e43a0b09748ef7cda3
+  - enabled: 1
+    path: Assets/Scenes/Settings.unity
+    guid: f0d5b6c155c891f42a31f4b9ce495504
   m_configObjects: {}

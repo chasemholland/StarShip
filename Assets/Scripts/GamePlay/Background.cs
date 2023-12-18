@@ -67,6 +67,9 @@ public class Background : MonoBehaviour
         // add as listener for decrease shield event
         EventManager.AddListener(EventName.DecreaseShieldEvent, HandleDecreaseShieldEvent);
 
+        // add as listener for boss killed event
+        EventManager.AddListener(EventName.BossKilledEvent, HandleBossKill);
+
         // set up money text
         moneyValue = PlayerPrefs.GetFloat(PlayerPrefNames.PlayerMoney.ToString(), 0);
         moneyText.text = moneyTextPrefix + MoneyHandler.ConvertMoney(moneyValue);
@@ -219,9 +222,47 @@ public class Background : MonoBehaviour
     /// <param name="n">unused</param>
     private void HandleInvasionCompleteEvent(float n)
     {
-        // load death scene
-        SceneManager.LoadScene("InvasionOver");
-        
+        // crossfade load
+        GameObject.Find("LevelLoaderFade").GetComponent<LevelLoader>().LoadNextScene("InvasionOver");
+       
+    }
+
+    /// <summary>
+    /// Handles boss kill
+    /// </summary>
+    /// <param name="n">unused</param>
+    private void HandleBossKill(float n)
+    {
+        // set targeting system active if not active
+        if (PlayerPrefs.GetInt(PlayerPrefNames.HasTargetingSystem.ToString(), 0) == 0)
+        {
+            PlayerPrefs.SetInt(PlayerPrefNames.HasTargetingSystem.ToString(), 1);
+        }
+
+        // set money multiplier active if not active
+        if (PlayerPrefs.GetInt(PlayerPrefNames.HasMoneyMultiplier.ToString(), 0) == 0)
+        {
+            PlayerPrefs.SetInt(PlayerPrefNames.HasMoneyMultiplier.ToString(), 1);
+        }
+
+        // set magnet active if not active
+        if (PlayerPrefs.GetInt(PlayerPrefNames.HasMagnet.ToString(), 0) == 0)
+        {
+            PlayerPrefs.SetInt(PlayerPrefNames.HasMagnet.ToString(), 1);
+        }
+
+        // pop up image displaying what has been activated if not active
+
+        // call separate function for modifiers if everything already active
+
+    }
+
+    /// <summary>
+    /// Displays modifier options via prefab menu
+    /// </summary>
+    private void DisplayModifiers()
+    {
+        // instantiate a random prefab menu of modifiers
     }
 
     #endregion

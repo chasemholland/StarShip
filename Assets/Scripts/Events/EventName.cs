@@ -17,4 +17,5 @@ public enum EventName
     DecreaseShieldEvent,
     InvasionCompleteEvent,
     StartTargetingEvent,
+    BossKilledEvent,
 }

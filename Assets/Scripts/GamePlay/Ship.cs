@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -33,8 +34,6 @@ public class Ship : FloatEventInvoker
     GameObject prefabAlien3LaserExplosion;
     float alien3LaserDamage;
 
-    [SerializeField]
-    float laserSpeed;
     // laser support
     float laserCooldown;
 
@@ -47,6 +46,8 @@ public class Ship : FloatEventInvoker
     float maxHealth;
     float shieldLeft;
     float maxShield;
+    float moneyMultiplier;
+    float magnetRange;
 
     // ship body reference
     Rigidbody2D shipBody;
@@ -57,8 +58,8 @@ public class Ship : FloatEventInvoker
     float shipHeight;
 
     // money values
-    int coinValue = 50;
-    int coinBagValue = 150;
+    private readonly int coinValue = 50;
+    private readonly int coinBagValue = 150;
 
 
     #endregion
@@ -145,8 +146,7 @@ public class Ship : FloatEventInvoker
                 // play laser sound
                 AudioManager.Play(AudioName.ShipLaser);
 
-                GameObject laser = Instantiate(prefabShipLaser1, new Vector3(transform.position.x, transform.position.y + (shipHeight / 2), 0f), Quaternion.identity);
-                //laser.GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, laserSpeed), ForceMode2D.Impulse);
+                Instantiate(prefabShipLaser1, new Vector3(transform.position.x, transform.position.y + (shipHeight / 2), 0f), Quaternion.identity);
 
                 // check if timer has been started
                 if (!cooldownTimer.Running)
@@ -239,7 +239,7 @@ public class Ship : FloatEventInvoker
             AudioManager.Play(AudioName.Pickup);
 
             Destroy(other.gameObject);
-            unityEvents[EventName.AddMoneyEvent].Invoke(coinValue);
+            unityEvents[EventName.AddMoneyEvent].Invoke(MathF.Round(coinValue * moneyMultiplier, 0));
         }
 
         // check for coin bag pickup
@@ -249,7 +249,7 @@ public class Ship : FloatEventInvoker
             AudioManager.Play(AudioName.Pickup);
 
             Destroy(other.gameObject);
-            unityEvents[EventName.AddMoneyEvent].Invoke(coinBagValue);
+            unityEvents[EventName.AddMoneyEvent].Invoke(MathF.Round(coinBagValue * moneyMultiplier, 0));
         }
 
         // check for health pickup
@@ -281,10 +281,10 @@ public class Ship : FloatEventInvoker
             AudioManager.Play(AudioName.Pickup);
 
             // check if shield amount can be added
-            if (shieldLeft + maxShield / 2 <= maxShield)
+            if (shieldLeft + maxShield / 4 <= maxShield)
             {
-                shieldLeft += maxShield / 2;
-                unityEvents[EventName.IncreaseShieldEvent].Invoke(maxShield / 2);
+                shieldLeft += maxShield / 4;
+                unityEvents[EventName.IncreaseShieldEvent].Invoke(maxShield / 4);
             }
             else
             {
@@ -306,9 +306,6 @@ public class Ship : FloatEventInvoker
     /// </summary>
     private void SetShipValues()
     {
-        // check for laser speed upgrades
-        laserSpeed = ConfigUtils.Ship1LaserSpeed * (1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipLaserSpeed.ToString(), 0));
-
         // check for laser cooldown upgrades
         laserCooldown = ConfigUtils.Ship1LaserCooldown / (1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipLaserCooldown.ToString(), 0));
 
@@ -322,6 +319,29 @@ public class Ship : FloatEventInvoker
         // set shield
         shieldLeft = 0;
         maxShield = ConfigUtils.Ship1MaxShield * (1 + PlayerPrefs.GetFloat(PlayerPrefNames.ShipMaxShield.ToString(), 0));
+
+        // set money multiplier
+        if (PlayerPrefs.GetInt(PlayerPrefNames.HasMoneyMultiplier.ToString(), 0) == 1)
+        {
+            moneyMultiplier = ConfigUtils.Ship1MoneyMultiplier * (1 + PlayerPrefs.GetFloat(PlayerPrefNames.MoneyMultiplier.ToString(), 0));
+        }
+        else
+        {
+            // default to 1, no multiplier
+            moneyMultiplier = 1;
+        }
+
+        // set magnet range
+        if (PlayerPrefs.GetInt(PlayerPrefNames.HasMagnet.ToString(), 0) == 10)
+        {
+            magnetRange = ConfigUtils.Ship1MagnetRange * (1 + PlayerPrefs.GetFloat(PlayerPrefNames.MagnetRange.ToString(), 0));
+        }
+        else
+        {
+            // default to 0, no range
+            magnetRange = 0;
+        }
+        
 
     }
 
